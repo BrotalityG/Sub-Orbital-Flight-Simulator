@@ -12,18 +12,12 @@ public class GeneralCalculations : MonoBehaviour
     protected static float MSLTempK = MSLTempC + 273.15f; // This is in Kelvin
     protected float TempK = MSLTempK;
     protected float AirPressure = 1013.25f; // This is in hPa
+    protected float Density = 1.225f; // This is in kg/m^3
 
 
     // These will be private so only this class can edit/view it.
     private float LapseRate = 0.0065f; // This is in degrees Celsius per meter
     private float LastAltitude = 0f;
-    private int EarthRadius = 6371100; // This is in meters
-    private float EarthMass = 5.972f * Mathf.Pow(10, 24); // This is in kg
-    private float ShuttleMass = 110000; // This is in kg (This assumes loaded mass of the shuttle.)
-    private float r = EarthRadius + ASL; // This is in meters
-    private float G = 6.67408f * Mathf.Pow(10, -11); // This is in m^3 kg^-1 s^-2
-    private float g = G * (EarthMass*ShuttleMass / Mathf.Pow(r, 2))
-
 
     // Start is called before the first frame update
     void Start()
@@ -34,31 +28,42 @@ public class GeneralCalculations : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (ASL < 100000) // 100,000 meters is the maximum altitude for the atmosphere.
+        {
+            CalculateAtmosphere();
+        }
+        else
+        {
+            // If the altitude is greater than 100,000 meters, the temperature is -23.4 degrees Celsius.
+            AirPressure = 0f;
+            Density = 0f;
+        }
+    }
+
+    private void CalculateAtmosphere()
+    {
         // Calculate the lapse rate.
         CalculateLapseRate();
 
         // Calculate temperature at altitude.
         CalculateTemperatureAtAltitude();
 
-        // Calculate the force of gravity at altitude.
-        CalculateGravity();
+        // Calculate air pressure.
+        CalculateAirPressure();
+
+        // Calculate the air density.
+        CalculateDensity();
     }
 
-    private void CalculateGravity()
+    private void CalculateDensity()
     {
-        // The force of gravity at a given altitude can be calculated using the following formula:
-        // F = G(m1*m2)/r^2
+        // Density = P*(T0/T)
         // Where:
-        // F = force of gravity
-        // G = gravitational constant
-        // m1 = mass of first object
-        // m2 = mass of second object
-        // r = distance between the centers of the masses of the objects
+        // P = air pressure
+        // T0 = temperature at sea level
+        // T = temperature at altitude
 
-        // The mass of the object is the mass of the Earth.
-        r = EarthRadius + ASL;
-
-        g = G * (EarthMass*ShuttleMass / Mathf.Pow(r, 2));
+        Density = AirPressure * (MSLTempK/TempK);
     }
 
     private void CalculateAirPressure()
@@ -74,7 +79,7 @@ public class GeneralCalculations : MonoBehaviour
 
         float R = 287.057f; // This is in J/(mol*K)
 
-        AirPressure = Mathf.Pow((1-((LapseRate/MSLTempK)*ASL)), (g/(R*LapseRate)));
+        AirPressure = Mathf.Pow((1-((LapseRate/MSLTempK)*ASL)), (9.81f/(R*LapseRate)))/10;
     }
 
     private void CalculateTemperatureAtAltitude()
@@ -113,7 +118,7 @@ public class GeneralCalculations : MonoBehaviour
         }
         else if (ASL >= 11000 && ASL < 20000)
         {
-            LapseRate = 0f;
+            LapseRate = 0.00000000000000001f;
         }
         else if (ASL >= 20000 && ASL < 32000)
         {
@@ -125,7 +130,7 @@ public class GeneralCalculations : MonoBehaviour
         }
         else if (ASL >= 47000 && ASL < 51000)
         {
-            LapseRate = 0f;
+            LapseRate = 0.00000000000000001f;
         }
         else if (ASL >= 51000 && ASL < 71000)
         {
@@ -137,7 +142,7 @@ public class GeneralCalculations : MonoBehaviour
         }
         else // Assume constant temperature above 86000 meters
         {
-            LapseRate = 0f;
+            LapseRate = 0.00000000000000001f;
         }
     }
 }
