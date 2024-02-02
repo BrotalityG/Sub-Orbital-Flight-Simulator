@@ -7,16 +7,31 @@ using UnityEngine;
 public class GeneralCalculations : MonoBehaviour
 {
     // These will be visible to other classes.
-    public float ASL = 0f;
-    protected static int MSLTempC = 15; // This is in Degrees Celsius
-    protected static float MSLTempK = MSLTempC + 273.15f; // This is in Kelvin
-    protected float TempK = MSLTempK;
-    protected float AirPressure = 1013.25f; // This is in hPa
-    protected float Density = 1.225f; // This is in kg/m^3
 
+    [SerializeField]
+    public float ASL = 0f;
+
+    [SerializeField]
+    public float gravity = 0f;
+    [SerializeField]
+    protected static int MSLTempC = 15; // This is in Degrees Celsius
+    [SerializeField]
+    protected static float MSLTempK = MSLTempC + 273.15f; // This is in Kelvin
+    [SerializeField]
+    protected float TempK = MSLTempK;
+
+    [SerializeField]
+    protected float AirPressure = 1013.25f; // This is in hPa
+
+    [SerializeField]
+    protected float Density = 1.225f; // This is in kg/m^3\
+
+    [SerializeField]
+    Rigidbody rb;
 
     // These will be private so only this class can edit/view it.
     private float LapseRate = 0.0065f; // This is in degrees Celsius per meter
+    [SerializeField]
     private float LastAltitude = 0f;
 
     // Start is called before the first frame update
@@ -28,6 +43,9 @@ public class GeneralCalculations : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        ASL = transform.position.y;
+        Physics.gravity = new Vector3(0, -gravity, 0);
+
         if (ASL < 100000) // 100,000 meters is the maximum altitude for the atmosphere.
         {
             CalculateAtmosphere();
@@ -57,13 +75,13 @@ public class GeneralCalculations : MonoBehaviour
 
     private void CalculateDensity()
     {
-        // Density = P*(T0/T)
+        // Relative Density = P*(T0/T)
         // Where:
-        // P = air pressure
+        // P =  relative air pressure
         // T0 = temperature at sea level
         // T = temperature at altitude
 
-        Density = AirPressure * (MSLTempK/TempK);
+        Density = (AirPressure * (MSLTempK/TempK) / 1013.25f) * 1.225f;
     }
 
     private void CalculateAirPressure()
@@ -79,7 +97,7 @@ public class GeneralCalculations : MonoBehaviour
 
         float R = 287.057f; // This is in J/(mol*K)
 
-        AirPressure = Mathf.Pow((1-((LapseRate/MSLTempK)*ASL)), (9.81f/(R*LapseRate)))/10;
+        AirPressure = (Mathf.Pow((1-((LapseRate/MSLTempK)*ASL)), (9.81f/(R*LapseRate))))*1013.25f;
     }
 
     private void CalculateTemperatureAtAltitude()
