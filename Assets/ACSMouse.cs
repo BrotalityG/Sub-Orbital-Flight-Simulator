@@ -25,6 +25,7 @@ public class ACSMouse : MonoBehaviour
     [SerializeField]
     public float yAbsBound = 90;
     protected Vector3 mousePos;
+    protected Vector3 currCraftPos;
     public Vector3 currCraftAtt; //Need to find a way to have modify
     protected Vector3[] smoothMouseDelta = new Vector3[10];
     protected int smoothCount;
@@ -97,6 +98,7 @@ public class ACSMouse : MonoBehaviour
             {
             startSmoothing = false;
             Debug.Log("TEST Stop Smoothing.");
+            iterateSmooth = 0;
             } else {
                 iterateSmooth++;
             }
@@ -106,25 +108,29 @@ public class ACSMouse : MonoBehaviour
 
     void SmoothCamReturn(Vector3 currPos, Vector3 targetPos)
     { //Uses pointers to keep updating
-        float xDelta = Math.Abs(currPos.x-targetPos.x); 
-        float yDelta = Math.Abs(currPos.y-targetPos.y);
-        float xDeltaInc = xDelta/smoothFrameCount;
+        float xDelta = currPos.x-targetPos.x; 
+        float yDelta = currPos.y-targetPos.y;
+        
+        float xDeltaInc = xDelta/smoothFrameCount; //Need to ensure division does not require a recast of smoothFrameCount
         float yDeltaInc = yDelta/smoothFrameCount;
         
-        for(int i = smoothFrameCount - 1; i >= 0; i--)
+        for(int i = 0; i >= smoothFrameCount; i++)
         {
-            smoothMouseDelta[i] = new Vector3 (xDeltaInc*(i+1), yDeltaInc*(i+1), 0); //Need to modify to sync with craft
+            smoothMouseDelta[i] = new Vector3 (xDeltaInc*(i+1), yDeltaInc*(i+1), 0); //Need to modify to sync with craft. Need to double check math
         }
+
     }
 
   public void SetCurrCraftAtt()
     {
-
+        //Needs to fetch current craft attitude and position.
     }
 
-   public Vector3 SyncAtt()
+   private Vector3 SyncAtt()
     {
+        SetCurrCraftAtt;
         Debug.Log("TEST Sync attitude");
+        //Need to find a way to take the postiion/attitude of craft to refer the camera to.
         return new Vector3 (0,0,0);
     }
 }
