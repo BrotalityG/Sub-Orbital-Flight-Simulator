@@ -23,11 +23,13 @@ public class ACSMouse : MonoBehaviour
     [SerializeField]
     public int smoothFrameCount = 10;
     [SerializeField]
-    public float xAbsBound = 45f;
+    public float xAbsBound = 45;
     [SerializeField]
-    public float yAbsBound = 45f;
+    public float yAbsBound = 45;
     [SerializeField] 
-    private TextMeshProUGUI hud;
+    private TextMeshProUGUI hudBasic;
+    [SerializeField]
+    private TextMeshProUGUI hudAttitude;
     [SerializeField]
     public List<Camera> Cameras;
     protected Vector3 mousePos;
@@ -43,6 +45,7 @@ public class ACSMouse : MonoBehaviour
     {
         Cameras[1].enabled = false; //Third Person View
         Cameras[0].enabled = true; //First Person View
+        GenerateHUD();
     }
     
     void Update() //Still need to add look limits (Assuming 90 off of each point?)
@@ -52,11 +55,15 @@ public class ACSMouse : MonoBehaviour
             if(!startSmoothing)
             {
             //Calculate frames needed between center and mouse pos
+<<<<<<< Updated upstream
             SmoothCamReturn(mousePos, new Vector3 (0,0,0)); //Second vector is a placeholder
             if(Input.GetKeyUp(KeyCode.LeftAlt))
             {
                 ReverseArray();
             }
+=======
+            SmoothCamReturn(mousePos, new Vector3 (0,0,0)); //Second vector is a placeholder. Something wrong here.
+>>>>>>> Stashed changes
             startSmoothing = true;
             Debug.Log("TEST Starting smoothing");
             }
@@ -132,8 +139,13 @@ public class ACSMouse : MonoBehaviour
         //Need to find a way to reset cursor pos to (0,0), as well as a way to make it natural
     }
 
+<<<<<<< Updated upstream
     void SmoothCamReturn(Vector3 currPos, Vector3 targetPos) //Calculates the increment for a certain number of frames between the current position of the mouse and 0,0, and populates the array with it
     { //Uses pointers to keep updating
+=======
+    void SmoothCamReturn(Vector3 currPos, Vector3 targetPos)
+    { //Uses pointers to keep updating. Need to test, something not workong
+>>>>>>> Stashed changes
         float xDelta = currPos.x-targetPos.x; 
         float yDelta = currPos.y-targetPos.y;
         
@@ -162,10 +174,10 @@ public class ACSMouse : MonoBehaviour
 
     private void UpdateHUD() //Will need to fix. Updates HUD to accurately represent craft's behavior
     {
-        hud.text = "Throttle \n"; //+ throttle.ToString("F0") + "%\n";
-        hud.text += "Airspeed \n"; //+ (rb.velocity.magnitude * 3.6f).ToString("F0") + "km/h\n";
-        hud.text += "Altitude \n";//+ transform.position.y.ToString("F0") + "m";
-        hud.text += "Flaps ";//+ transform.position.y.ToString("F0") + "m";
+        hudBasic.text = "Throttle: \n"; //+ throttle.ToString("F0") + "%\n";
+        hudBasic.text += "Airspeed: \n"; //+ (rb.velocity.magnitude * 3.6f).ToString("F0") + "km/h\n";
+        hudBasic.text += "Altitude: \n";//+ transform.position.y.ToString("F0") + "m";
+        hudBasic.text += "Flaps: ";//+ transform.position.y.ToString("F0") + "m";
     }
 
     private void SwapCamera() //Toggles between cameras in the list Cameras per call
@@ -182,6 +194,7 @@ public class ACSMouse : MonoBehaviour
             Cameras[0].enabled = true;
         }
     }
+<<<<<<< Updated upstream
 
     //I'm Lazy, here's this instead of manually fixing SmoothCamReturn
     private void ReverseArray() //Reverses an array's order
@@ -192,6 +205,57 @@ public class ACSMouse : MonoBehaviour
             tempArr[Math.Abs(i-smoothMouseDelta.Length)] = smoothMouseDelta[i];
         }
         smoothMouseDelta = tempArr;
+=======
+    private void GenerateHUD()//TODO: Set to run on Start. Current snippet was taken from the Unity API for reference materials
+    {
+        float width = 1;
+        float height = 1;
+        
+        MeshRenderer meshRenderer = gameObject.AddComponent<MeshRenderer>();
+        meshRenderer.sharedMaterial = new Material(Shader.Find("Standard"));
+
+        MeshFilter meshFilter = gameObject.AddComponent<MeshFilter>();
+
+        Mesh mesh = new Mesh();
+
+        Vector3[] vertices = new Vector3[4]
+        {
+            new Vector3(0, 0, 0),
+            new Vector3(width, 0, 0),
+            new Vector3(0, height, 0),
+            new Vector3(width, height, 0)
+        };
+        mesh.vertices = vertices;
+
+        int[] tris = new int[6]
+        {
+            // lower left triangle
+            0, 2, 1,
+            // upper right triangle
+            2, 3, 1
+        };
+        mesh.triangles = tris;
+
+        Vector3[] normals = new Vector3[4]
+        {
+            -Vector3.forward,
+            -Vector3.forward,
+            -Vector3.forward,
+            -Vector3.forward
+        };
+        mesh.normals = normals;
+
+        Vector2[] uv = new Vector2[4]
+        {
+            new Vector2(0, 0),
+            new Vector2(1, 0),
+            new Vector2(0, 1),
+            new Vector2(1, 1)
+        };
+        mesh.uv = uv;
+
+        meshFilter.mesh = mesh;
+>>>>>>> Stashed changes
     }
 }
 
