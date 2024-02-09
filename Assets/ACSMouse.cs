@@ -4,6 +4,7 @@ using UnityEngine;
 using System.Drawing;
 using System;
 using TMPro;
+using UnityEngine.UIElements;
 [AddComponentMenu("ACS Mouse Control")]
 
 public class ACSMouse : MonoBehaviour
@@ -52,6 +53,10 @@ public class ACSMouse : MonoBehaviour
             {
             //Calculate frames needed between center and mouse pos
             SmoothCamReturn(mousePos, new Vector3 (0,0,0)); //Second vector is a placeholder
+            if(Input.GetKeyUp(KeyCode.LeftAlt))
+            {
+                ReverseArray();
+            }
             startSmoothing = true;
             Debug.Log("TEST Starting smoothing");
             }
@@ -127,7 +132,7 @@ public class ACSMouse : MonoBehaviour
         //Need to find a way to reset cursor pos to (0,0), as well as a way to make it natural
     }
 
-    void SmoothCamReturn(Vector3 currPos, Vector3 targetPos)
+    void SmoothCamReturn(Vector3 currPos, Vector3 targetPos) //Calculates the increment for a certain number of frames between the current position of the mouse and 0,0, and populates the array with it
     { //Uses pointers to keep updating
         float xDelta = currPos.x-targetPos.x; 
         float yDelta = currPos.y-targetPos.y;
@@ -135,26 +140,27 @@ public class ACSMouse : MonoBehaviour
         float xDeltaInc = xDelta/smoothFrameCount; //Need to ensure division does not require a recast of smoothFrameCount
         float yDeltaInc = yDelta/smoothFrameCount;
         
-        for(int i = 0; i >= smoothFrameCount; i++)
+        for(int i = 0; i > smoothFrameCount; i++)
         {
             smoothMouseDelta[i] = new Vector3 (xDeltaInc*(i+1), yDeltaInc*(i+1), 0); //Need to modify to sync with craft. Need to double check math
         }
 
     }
 
-  private void SetCurrCraftAtt()
+  private void SetCurrCraftAtt() //Sets current craft attitude to an angle to use SyncAtt
     {
         //Needs to fetch current craft attitude and position.
     }
 
-   private Vector3 SyncAtt()
+   private Vector3 SyncAtt() //Syncs camera attitude with craft attitude
     {
+        SetCurrCraftAtt();
         //Debug.Log("TEST Sync attitude");
         //Need to find a way to take the postiion/attitude of craft to refer the camera to.
         return new Vector3 (0,0,0);
     }
 
-    private void UpdateHUD() //Will need to fix
+    private void UpdateHUD() //Will need to fix. Updates HUD to accurately represent craft's behavior
     {
         hud.text = "Throttle \n"; //+ throttle.ToString("F0") + "%\n";
         hud.text += "Airspeed \n"; //+ (rb.velocity.magnitude * 3.6f).ToString("F0") + "km/h\n";
@@ -162,7 +168,7 @@ public class ACSMouse : MonoBehaviour
         hud.text += "Flaps ";//+ transform.position.y.ToString("F0") + "m";
     }
 
-    private void SwapCamera()
+    private void SwapCamera() //Toggles between cameras in the list Cameras per call
     {
         if(toggleCam)
         {
@@ -175,6 +181,17 @@ public class ACSMouse : MonoBehaviour
             Cameras[1].enabled = false;
             Cameras[0].enabled = true;
         }
+    }
+
+    //I'm Lazy, here's this instead of manually fixing SmoothCamReturn
+    private void ReverseArray() //Reverses an array's order
+    {
+        Vector3[] tempArr = new Vector3[smoothMouseDelta.Length];
+        for(int i = 0; i < smoothMouseDelta.Length; i++)
+        {
+            tempArr[Math.Abs(i-smoothMouseDelta.Length)] = smoothMouseDelta[i];
+        }
+        smoothMouseDelta = tempArr;
     }
 }
 
