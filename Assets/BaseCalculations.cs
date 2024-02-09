@@ -53,7 +53,7 @@ namespace Calculator {
         [SerializeField]
         private float AirPressure = 1013.25f; // This is in hPa
         [SerializeField]
-        private float Density = 1.225f; // This is in kg/m^3\
+        private float Density = 1.225f; // This is in kg/m^3
         private static float PlanetMass = 5.972f * Mathf.Pow(10, 24); // This is in kg
         private static float PlanetRadius = 6371000; // This is in meters
         [SerializeField]
@@ -67,6 +67,9 @@ namespace Calculator {
         private float LastAltitude = 0f;
         private float crossSectionalArea = 1f;
         private Rigidbody rb;
+
+        [SerializeField]
+        private float AirSpeed = 0f;
 
         // Start is called before the first frame update
         void Start()
@@ -95,6 +98,8 @@ namespace Calculator {
 
             // Calculate aerodynamics
             CalculateAerodynamics();
+
+            AirSpeed = rb.velocity.magnitude;
         }
 
         private void CalculateAtmosphere()
@@ -124,10 +129,12 @@ namespace Calculator {
             CalculateLift();
 
             // Get normal force:
-            float normal = lift*Mathf.Cos(Vector3.Angle(transform.forward, Vector3.forward)) + drag*Mathf.Sin(Vector3.Angle(transform.forward, Vector3.forward));
+            float angle = Vector3.Angle(rb.velocity.normalized, transform.forward) * Mathf.Deg2Rad;
+
+            float normal = lift*Mathf.Cos(angle) + drag*Mathf.Sin(angle);
 
             // Apply the normal force.
-            rb.AddForce(Vector3.forward * normal, ForceMode.Force);
+            rb.AddForce(Vector3.up * normal, ForceMode.Force);
         }
 
         private void CalculateGravity()
@@ -174,7 +181,7 @@ namespace Calculator {
             // Cd = drag coefficient
             // A = cross-sectional area
             
-            drag = -1f/2f * Density * Mathf.Pow(rb.velocity.magnitude, 2) * DragCoefficient * crossSectionalArea;
+            drag = 1f/2f * Density * Mathf.Pow(rb.velocity.magnitude, 2) * DragCoefficient * crossSectionalArea;
         }
 
         private void CalculateLift()
