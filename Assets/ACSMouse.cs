@@ -5,6 +5,9 @@ using System.Drawing;
 using System;
 using TMPro;
 using UnityEngine.UIElements;
+using Color = UnityEngine.Color;
+using Unity.VisualScripting;
+using Calculator;
 [AddComponentMenu("ACS Mouse Control")]
 
 public class ACSMouse : MonoBehaviour
@@ -32,6 +35,14 @@ public class ACSMouse : MonoBehaviour
     private TextMeshProUGUI hudAttitude;
     [SerializeField]
     public List<Camera> Cameras;
+    [SerializeField]
+    protected Rigidbody referenceBody;
+    [SerializeField]
+    protected float xOffset = -30;
+    [SerializeField]
+    protected float yOffset = 10;
+    [SerializeField]
+    protected float zOffset = 0;
     protected Vector3 mousePos;
     protected Vector3 currCraftPos;
     public Vector3 currCraftAtt; //Need to find a way to have modify
@@ -40,30 +51,32 @@ public class ACSMouse : MonoBehaviour
     private int iterateSmooth = 0;
     private bool toggleHUD = false;
     private bool toggleCam = true;
+    private float maxAlt = 200f;
+    private GeneralCalculations calc;
+    private ACSKeyboard kbd;
 
     void Start()
     {
+        calc = FindAnyObjectByType<GeneralCalculations>();
+        kbd = FindAnyObjectByType<ACSKeyboard>();
         Cameras[1].enabled = false; //Third Person View
         Cameras[0].enabled = true; //First Person View
-        GenerateHUD();
+        UpdateCamera();
     }
     
     void Update() //Still need to add look limits (Assuming 90 off of each point?)
     {
         if(Input.GetKeyDown(KeyCode.LeftAlt) || Input.GetKeyUp(KeyCode.LeftAlt))
         {
+            iterateSmooth = 0;
             if(!startSmoothing)
             {
             //Calculate frames needed between center and mouse pos
-<<<<<<< Updated upstream
             SmoothCamReturn(mousePos, new Vector3 (0,0,0)); //Second vector is a placeholder
             if(Input.GetKeyUp(KeyCode.LeftAlt))
             {
                 ReverseArray();
             }
-=======
-            SmoothCamReturn(mousePos, new Vector3 (0,0,0)); //Second vector is a placeholder. Something wrong here.
->>>>>>> Stashed changes
             startSmoothing = true;
             Debug.Log("TEST Starting smoothing");
             }
@@ -87,38 +100,39 @@ public class ACSMouse : MonoBehaviour
             {
                 pitchAng *= -1;
             }
-            //Attitude limiting. Needs work
-            if(yawAng > xAbsBound)
+            //Attitude limiting. Should correct to angle of craft
+            if(yawAng > xAbsBound+currCraftAtt.x)
             {
-                yawAng = xAbsBound;
+                yawAng = xAbsBound+currCraftAtt.x;
             }
-            if(yawAng < -xAbsBound)
+            if(yawAng < -xAbsBound+currCraftAtt.x)
             {
-                yawAng = -xAbsBound;
+                yawAng = -xAbsBound+currCraftAtt.x;
             }
-            if(pitchAng > yAbsBound)
+            if(pitchAng > yAbsBound+currCraftAtt.y)
             {
-                pitchAng = yAbsBound;
+                pitchAng = yAbsBound+currCraftAtt.y;
             }
-            if(pitchAng < -yAbsBound)
+            if(pitchAng < -yAbsBound+currCraftAtt.y)
             {
-                pitchAng = -yAbsBound;
+                pitchAng = -yAbsBound+currCraftAtt.y;
             }
-            mousePos.Set(yawAng, pitchAng ,rollAng);
+            mousePos.Set(yawAng, pitchAng ,currCraftAtt.z);
             if(startSmoothing == true)
             {
-                if(iterateSmooth >= smoothFrameCount)
+                if(iterateSmooth > smoothFrameCount)
                 {
                     startSmoothing = false;
                     Debug.Log("TEST Stop Smoothing.");
-                    iterateSmooth = 0;
                 } else {
                     iterateSmooth++;
                     Debug.Log("Iteration step");
-                    transform.eulerAngles = smoothMouseDelta[iterateSmooth];
+                    Cameras[0].transform.eulerAngles = smoothMouseDelta[iterateSmooth];
+                    Cameras[1].transform.eulerAngles = smoothMouseDelta[iterateSmooth];
                 }
             } else {
-                transform.eulerAngles = mousePos;
+                Cameras[0].transform.eulerAngles = mousePos;
+                Cameras[1].transform.eulerAngles = mousePos;
             }
             //Sensitivity limits
             if(sens <= 0)
@@ -132,20 +146,18 @@ public class ACSMouse : MonoBehaviour
             }
         } else {
         //Correcting to level (Rollwise) with craft
-        transform.eulerAngles = SyncAtt();
+            Cameras[0].transform.eulerAngles = currCraftAtt;
+            Cameras[1].transform.eulerAngles = currCraftAtt;
         }
         UpdateHUD();
+        UpdateBackground();
+        UpdateCamera();
         //Works, a tad bit janky though on trackpad.
         //Need to find a way to reset cursor pos to (0,0), as well as a way to make it natural
     }
 
-<<<<<<< Updated upstream
     void SmoothCamReturn(Vector3 currPos, Vector3 targetPos) //Calculates the increment for a certain number of frames between the current position of the mouse and 0,0, and populates the array with it
     { //Uses pointers to keep updating
-=======
-    void SmoothCamReturn(Vector3 currPos, Vector3 targetPos)
-    { //Uses pointers to keep updating. Need to test, something not workong
->>>>>>> Stashed changes
         float xDelta = currPos.x-targetPos.x; 
         float yDelta = currPos.y-targetPos.y;
         
@@ -159,25 +171,28 @@ public class ACSMouse : MonoBehaviour
 
     }
 
-  private void SetCurrCraftAtt() //Sets current craft attitude to an angle to use SyncAtt
+  
+   private void SyncAtt() //Syncs camera attitude with craft attitude
     {
-        //Needs to fetch current craft attitude and position.
+        currCraftAtt = referenceBody.transform.eulerAngles;
+        Cameras[0].transform.eulerAngles = currCraftAtt;
+        Cameras[1].transform.eulerAngles = Cameras[0].transform.eulerAngles;
     }
 
-   private Vector3 SyncAtt() //Syncs camera attitude with craft attitude
+    private void UpdateCamera() //Updates camera position
     {
-        SetCurrCraftAtt();
-        //Debug.Log("TEST Sync attitude");
-        //Need to find a way to take the postiion/attitude of craft to refer the camera to.
-        return new Vector3 (0,0,0);
+        currCraftPos = referenceBody.transform.position;
+        Cameras[0].transform.position = new Vector3(currCraftPos.x+10, currCraftPos.y+10, currCraftPos.z);
+        Cameras[1].transform.position = new Vector3 (Cameras[0].transform.position.x+xOffset, Cameras[0].transform.position.y+yOffset, Cameras[0].transform.position.z+zOffset);
     }
 
-    private void UpdateHUD() //Will need to fix. Updates HUD to accurately represent craft's behavior
+    private void UpdateHUD() //Will need to fix. Updates HUD to accurately represent craft's behavior. Need a way to pull from AEPE
     {
-        hudBasic.text = "Throttle: \n"; //+ throttle.ToString("F0") + "%\n";
-        hudBasic.text += "Airspeed: \n"; //+ (rb.velocity.magnitude * 3.6f).ToString("F0") + "km/h\n";
-        hudBasic.text += "Altitude: \n";//+ transform.position.y.ToString("F0") + "m";
-        hudBasic.text += "Flaps: ";//+ transform.position.y.ToString("F0") + "m";
+        hudBasic.text = "Throttle: " + kbd.getThrustVal() + "\n";
+        hudBasic.text += "IAS: " + calc.getIAS() + "\n"; //+ (rb.velocity.magnitude * 3.6f).ToString("F0") + "km/h\n";
+        hudBasic.text += "GS: \n"; //+ ().ToString("F0") + "km/h\n";
+        hudBasic.text += "Altitude: " + calc.getAlt() + "m\n";//+ transform.position.y.ToString("F0") + "m";
+        hudBasic.text += "Flap Position: 0";//+ Need to work on flaps value. Probably within AEPE
     }
 
     private void SwapCamera() //Toggles between cameras in the list Cameras per call
@@ -194,7 +209,6 @@ public class ACSMouse : MonoBehaviour
             Cameras[0].enabled = true;
         }
     }
-<<<<<<< Updated upstream
 
     //I'm Lazy, here's this instead of manually fixing SmoothCamReturn
     private void ReverseArray() //Reverses an array's order
@@ -205,8 +219,8 @@ public class ACSMouse : MonoBehaviour
             tempArr[Math.Abs(i-smoothMouseDelta.Length)] = smoothMouseDelta[i];
         }
         smoothMouseDelta = tempArr;
-=======
-    private void GenerateHUD()//TODO: Set to run on Start. Current snippet was taken from the Unity API for reference materials
+    }
+    /*private void GenerateHUD()//TODO: Set to run on Start. Current snippet was taken from the Unity API for reference materials. NOT NEEDED FOR THIS SPRINT
     {
         float width = 1;
         float height = 1;
@@ -255,7 +269,17 @@ public class ACSMouse : MonoBehaviour
         mesh.uv = uv;
 
         meshFilter.mesh = mesh;
->>>>>>> Stashed changes
+    }*/
+
+    void UpdateBackground() //Borrowed from Unity API for now.
+    {
+        Color color1 = new Color(0.663f,0.776f,0.875f,1); //Floor
+        Color color2 = new Color(0.027f,0.047f,0.151f,1); //Ceiling, not complete black to be nicer on the eyes
+        float Altitude = Cameras[0].transform.position.y;
+        float altP = Altitude/maxAlt;
+
+        Cameras[0].backgroundColor = Color.Lerp(color1, color2, altP);
+        Cameras[1].backgroundColor = Color.Lerp(color1, color2, altP);
     }
 }
 

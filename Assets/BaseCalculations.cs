@@ -30,7 +30,9 @@
 */
 
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.Android;
 
 // g = G(m1*m2)/r^2 - This is the formula for the force of gravity between two objects, where m is kg and r is meters.
 namespace Calculator {
@@ -41,11 +43,11 @@ namespace Calculator {
 
         // These will be visible to other classes.
         [SerializeField]
-        private float DragCoefficient = 1f;
+        protected float DragCoefficient = 1f;
         [SerializeField]
-        private float LiftCoefficient = 1f;
+        protected float LiftCoefficient = 1f;
         [SerializeField]
-        private float ASL = 0f;
+        protected float ASL = 0f;
         private static int MSLTempC = 15; // This is in Degrees Celsius
         private static float MSLTempK = MSLTempC + 273.15f; // This is in Kelvin
         [SerializeField]
@@ -78,6 +80,16 @@ namespace Calculator {
             rb.useGravity = false;
 
             ASL = transform.position.y;
+        }
+
+        public float getIAS()
+        {
+            return AirSpeed;
+        }
+
+        public float getAlt()
+        {
+            return ASL;
         }
 
         // Update is called once per frame
