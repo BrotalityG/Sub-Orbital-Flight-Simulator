@@ -13,19 +13,45 @@ public class ACSKeyboard : MonoBehaviour
     [SerializeField]
     private int ThrustVal = 0;
     [SerializeField]
+    public float throttleIncrement = 0.1f;
+
+    public float maxThrottle = 100f;
+    public float responsiveness = 10f;
+    private float throttle;
+    private float roll;
+    private float pitch;
+    private float yaw;
+    private float responseMod {
+    get 
+    {
+        return shut.mass / 10f * responsiveness;
+    }
+    }
     protected Rigidbody shut; 
     protected Vector3 shutPos = new Vector3(0,0,0);
     protected Vector3 shutAtt = new Vector3(0,0,0);
-
-    // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
-        //Keep just in case
+        shut = GetComponent<Rigidbody>();
+    }
+
+    private void HandleInputs() {
+        roll = Input.GetAxis("Roll");
+        pitch = Input.GetAxis("Pitch");
+        yaw = Input.GetAxis("Yaw");
+
+        if (Input.GetKey(KeyCode.LeftShift)) throttle += throttleIncrement;
+        else if (Input.GetKey(KeyCode.LeftControl)) throttle -= throttleIncrement;
+        throttle = Mathf.Clamp(throttle, 0f, 100f);
     }
 
     // Update is called once per frame
     void Update()
     {
+
+        HandleInputs();
+
+        /*
         if(Input.GetKey(KeyCode.W))
         {
             pitch(true);
@@ -74,9 +100,36 @@ public class ACSKeyboard : MonoBehaviour
         }
 
         shut.transform.eulerAngles = shutAtt;//Why no respond?
+
+        */
+    }
+    private void FixedUpdate() {
+        float throttlePercent = throttle / maxThrottle;
+        print(throttlePercent);
+
+        shut.AddForce(-transform.forward * 5250000f * throttlePercent, ForceMode.Force);
+        rollinput();
+        pitchinput();
+        yawinput();
+
     }
 
-    void pitch(bool direction)
+    void rollinput() {
+        shut.AddRelativeTorque(Vector3.right * roll * responseMod);
+        print(roll);
+    }
+
+    void pitchinput() {
+        shut.AddRelativeTorque(Vector3.forward * pitch * responseMod);
+        print(pitch);
+    }
+
+    void yawinput() {
+        shut.AddRelativeTorque(Vector3.up * yaw * responseMod);
+        print(yaw);
+    }
+    /*
+    void pitchS(bool direction)
     {
         if(direction)
         {
@@ -87,7 +140,7 @@ public class ACSKeyboard : MonoBehaviour
             shutAtt += new Vector3 (rateOfPitch*-1, 0, 0);
         }
     }
-    void roll(bool direction)
+    void rollS(bool direction)
     {
         if(direction)
         {
@@ -98,7 +151,7 @@ public class ACSKeyboard : MonoBehaviour
             shutAtt += new Vector3 (0,0, rateOfRoll*-1);
         }
     }
-    void yaw(bool direction)
+    void yawS(bool direction)
     {
         if(direction)
         {
@@ -120,9 +173,11 @@ public class ACSKeyboard : MonoBehaviour
             ThrustVal--;
         }
     }
-
+    */
     public int getThrustVal()
     {
         return ThrustVal;
     }
+
+    
 }
