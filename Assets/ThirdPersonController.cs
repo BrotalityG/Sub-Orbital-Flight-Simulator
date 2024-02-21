@@ -16,7 +16,7 @@ public class ThirdPersonController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Alpha1)) index = 0;
         else if (Input.GetKeyDown(KeyCode.Alpha2)) index = 1;
-        target = povs[index].position;
+        target = povs[index].position; // this chooses the position
     }
 
     private void FixedUpdate() {
