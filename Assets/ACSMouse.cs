@@ -53,12 +53,12 @@ public class ACSMouse : MonoBehaviour
     private bool toggleCam = true;
     private float maxAlt = 200f;
     private GeneralCalculations calc;
-    private ACSKeyboard kbd;
+    private ControlSystem.Keyboard kbd;
 
     void Start()
     {
         calc = FindAnyObjectByType<GeneralCalculations>();
-        kbd = FindAnyObjectByType<ACSKeyboard>();
+        kbd = FindAnyObjectByType<ControlSystem.Keyboard>();
         Cameras[1].enabled = false; //Third Person View
         Cameras[0].enabled = true; //First Person View
         UpdateCamera();
@@ -188,7 +188,7 @@ public class ACSMouse : MonoBehaviour
 
     private void UpdateHUD() //Will need to fix. Updates HUD to accurately represent craft's behavior. Need a way to pull from AEPE
     {
-        hudBasic.text = "Throttle: " + kbd.getThrustVal() + "\n";
+        hudBasic.text = "Throttle: " + kbd.getThrottle() + "\n";
         hudBasic.text += "IAS: " + calc.getIAS() + "\n"; //+ (rb.velocity.magnitude * 3.6f).ToString("F0") + "km/h\n";
         hudBasic.text += "GS: \n"; //+ ().ToString("F0") + "km/h\n";
         hudBasic.text += "Altitude: " + calc.getAlt() + "m\n";//+ transform.position.y.ToString("F0") + "m";

@@ -29,10 +29,10 @@
 
 */
 
+using System;
 using System.Collections.Generic;
-using JetBrains.Annotations;
+using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Android;
 
 // g = G(m1*m2)/r^2 - This is the formula for the force of gravity between two objects, where m is kg and r is meters.
 namespace Calculator {
@@ -60,6 +60,7 @@ namespace Calculator {
         private static float PlanetRadius = 6371000; // This is in meters
         [SerializeField]
         private float Gravity = G*PlanetMass/(Mathf.Pow(PlanetRadius, 2)); // This is in m/s^2
+        [SerializeField]
         private float drag = 0f;
         private float lift = 0f;
         private float newtonWeight = 0f; // This is in Newtons
@@ -72,6 +73,12 @@ namespace Calculator {
 
         [SerializeField]
         private float AirSpeed = 0f;
+        [SerializeField]
+        private float GroundSpeed = 0f;
+        [SerializeField]
+        private float Speed = 0f;
+        [SerializeField]
+        private int SpeedDirection = 0;
 
         // Start is called before the first frame update
         void Start()
@@ -87,15 +94,25 @@ namespace Calculator {
             return AirSpeed;
         }
 
+        public float getSpeed()
+        {
+            return Speed;
+        }
+
         public float getAlt()
         {
             return ASL;
         }
 
-        // Update is called once per frame
-        void Update()
+        public float getDensity()
         {
-            ASL = transform.position.y;
+            return Density;
+        }
+
+        // Update is called once per frame
+        void FixedUpdate()
+        {
+            ASL = transform.position.y+100000;
 
             // 100,000 meters is the maximum altitude for the atmosphere.
             if (ASL < 100000) {
@@ -111,7 +128,27 @@ namespace Calculator {
             // Calculate aerodynamics
             CalculateAerodynamics();
 
-            AirSpeed = rb.velocity.magnitude;
+            Vector3 projection = Vector3.Project(rb.velocity, transform.forward);
+            float dot = Vector3.Dot(rb.velocity.normalized, transform.forward);
+
+            switch (dot) {
+                case float n when n > 0:
+                    SpeedDirection = 1;
+                    break;
+                case float n when n < 0:
+                    SpeedDirection = -1;
+                    break;
+                case float n when n == 0:
+                    SpeedDirection = 0;
+                    break;
+            }
+
+            Speed = rb.velocity.magnitude;
+            AirSpeed = projection.magnitude;
+            GroundSpeed = AirSpeed / (Density / 1.225f);
+            if (float.IsNaN(GroundSpeed)) {
+                GroundSpeed = 0f;
+            }
         }
 
         private void CalculateAtmosphere()
@@ -132,7 +169,8 @@ namespace Calculator {
         private void CalculateAerodynamics()
         {
             // Very important that this gets calculated FIRST.
-            CalculateCrossSection();
+            //!CalculateCrossSection(); // Commented out for now, as it is not working as intended.
+            crossSectionalArea = 500f;
 
             // Calculate the drag.
             CalculateDrag();
@@ -140,13 +178,19 @@ namespace Calculator {
             // Calculate the lift.
             CalculateLift();
 
-            // Get normal force:
-            float angle = Vector3.Angle(rb.velocity.normalized, transform.forward) * Mathf.Deg2Rad;
+            // Apply the forces.
+            rb.AddForce(rb.velocity.normalized * -drag, ForceMode.Force);
+            rb.AddForce(transform.up * lift, ForceMode.Force);
 
-            float normal = lift*Mathf.Cos(angle) + drag*Mathf.Sin(angle);
+            // //! Normal force is not working as intended, so it is commented out for now.
+            // // Get normal force:
+            // float angle = Mathf.Acos(Vector3.Dot(transform.forward, rb.velocity.normalized)/(rb.velocity.normalized.magnitude*transform.forward.magnitude));
 
-            // Apply the normal force.
-            rb.AddForce(Vector3.up * normal, ForceMode.Force);
+            // float normal = lift*Mathf.Cos(angle) + drag*Mathf.Sin(angle);
+            // print("Lift: " + lift + " Drag: " + drag + " Angle: " + angle + " Normal: " + normal);
+
+            // // Apply the normal force.
+            // rb.AddRelativeForce(Vector3.up * normal, ForceMode.Force);
         }
 
         private void CalculateGravity()
@@ -172,7 +216,7 @@ namespace Calculator {
             // g = acceleration due to gravity
 
             // Firstly, lets get the gravitational acceleration at the current altitude:
-            Gravity = G*PlanetMass/(Mathf.Pow(PlanetRadius + ASL, 2));
+            Gravity = G*PlanetMass/Mathf.Pow(PlanetRadius + ASL, 2);
 
             // Now, lets calculate and apply the force of gravity:
             newtonWeight = rb.mass * Gravity;
@@ -180,8 +224,16 @@ namespace Calculator {
         }
 
         private void CalculateCrossSection()
-        {
-            crossSectionalArea = CrossSectionArea(gameObject, rb.velocity.normalized);
+        {   
+            try
+            {
+                crossSectionalArea = CrossSectionArea(gameObject, rb.velocity.normalized);
+                Warning.Severe(crossSectionalArea.ToString());
+            }
+            catch (System.Exception e)
+            {
+                Debug.Log(e);
+            }
         }
 
         private void CalculateDrag()
@@ -463,6 +515,8 @@ namespace Calculator {
 
             public T PopLast()
             {
+                if (this.Count == 0) return this[this.Count];
+                
                 T retVal = this[this.Count - 1];
                 this.RemoveAt(this.Count - 1);
                 return retVal;
