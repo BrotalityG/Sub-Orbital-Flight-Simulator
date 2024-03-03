@@ -115,17 +115,17 @@ public class ACSKeyboard : MonoBehaviour
     }
 
     void rollinput() {
-        shut.AddRelativeTorque(Vector3.right * roll * responseMod);
+        shut.AddTorque(transform.right * roll * responseMod);
         print(roll);
     }
 
     void pitchinput() {
-        shut.AddRelativeTorque(Vector3.forward * pitch * responseMod);
+        shut.AddTorque(transform.forward * pitch * responseMod);
         print(pitch);
     }
 
     void yawinput() {
-        shut.AddRelativeTorque(Vector3.up * yaw * responseMod);
+        shut.AddTorque(transform.up * yaw * responseMod);
         print(yaw);
     }
     /*
