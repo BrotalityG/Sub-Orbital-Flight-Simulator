@@ -79,6 +79,8 @@ namespace Calculator {
         private float Speed = 0f;
         [SerializeField]
         private int SpeedDirection = 0;
+        [SerializeField]
+        private float MachNumber = 0f;
 
         // Start is called before the first frame update
         void Start()
@@ -99,6 +101,11 @@ namespace Calculator {
             return Speed;
         }
 
+        public float getGS()
+        {
+            return GroundSpeed;
+        }
+
         public float getAlt()
         {
             return ASL;
@@ -107,6 +114,11 @@ namespace Calculator {
         public float getDensity()
         {
             return Density;
+        }
+
+        public float getMach()
+        {
+            return MachNumber;
         }
 
         // Update is called once per frame
@@ -149,6 +161,8 @@ namespace Calculator {
             if (float.IsNaN(GroundSpeed)) {
                 GroundSpeed = 0f;
             }
+
+            MachNumber = Speed/(331f*Mathf.Sqrt(TempK/273.15f));
         }
 
         private void CalculateAtmosphere()
@@ -170,7 +184,7 @@ namespace Calculator {
         {
             // Very important that this gets calculated FIRST.
             //!CalculateCrossSection(); // Commented out for now, as it is not working as intended.
-            crossSectionalArea = 500f;
+            crossSectionalArea = 82.314f;
 
             // Calculate the drag.
             CalculateDrag();
