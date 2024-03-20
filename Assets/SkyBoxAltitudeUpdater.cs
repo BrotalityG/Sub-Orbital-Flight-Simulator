@@ -17,11 +17,11 @@ public class Skybox_AtmosphereAdj : MonoBehaviour
     {
         //Until the sky limit issue is fixed: in luie to the 70km to 100km change in atmosphere thickness, this will use
         // 7km to 10km.
-        if (gameObject.transform.position.y > 7000f && gameObject.transform.position.y < 10000f){
+        if (gameObject.transform.position.y > -30000f && (gameObject.transform.position.y) < 0f){
 
-            RenderSettings.skybox.SetFloat("_AtmosphereThickness", .65f*((3000f-(gameObject.transform.position.y - 7000f))/3000f));
+            RenderSettings.skybox.SetFloat("_AtmosphereThickness", .65f*((-30000f-((gameObject.transform.position.y + 100000f) - 70000f))/30000f));
 
-        }else if (gameObject.transform.position.y >= 10000f){
+        }else if (gameObject.transform.position.y >= 0f){
 
             RenderSettings.skybox.SetFloat("_AtmosphereThickness", 0.0f);
 

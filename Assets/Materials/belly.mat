@@ -8,8 +8,8 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: belly
-  m_Shader: {fileID: -6465566751694194690, guid: f4cda9c59b5fc074192624be9ea7f60b, type: 3}
-  m_Parent: {fileID: 2100000, guid: 8c186767cd4762b418172514e41bce2b, type: 2}
+  m_Shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
+  m_Parent: {fileID: 3984835196897683268, guid: e8b0b3688951bf742941a1ac88c6e440, type: 3}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
   m_InvalidKeywords: []
@@ -17,7 +17,8 @@ Material:
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
-  stringTagMap: {}
+  stringTagMap:
+    RenderType: Opaque
   disabledShaderPasses: []
   m_LockedProperties: 
   m_SavedProperties:
@@ -33,6 +34,7 @@ Material:
     - _Glossiness: 0.5
     - _GlossyReflections: 1
     - _Parallax: 0.02
+    - _QueueControl: 0
     - _Roundness: 0.008
     - _Smoothness: 0
     m_Colors:
