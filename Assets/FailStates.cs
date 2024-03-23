@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using Calculator;
-using ControlSystem;
 using Unity.VisualScripting;
 using UnityEditor.Callbacks;
 using UnityEditor.SearchService;
@@ -36,6 +35,7 @@ public class FailStates : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        fuel = calc.getFuel();
         alt = calc.getAlt();
 
 

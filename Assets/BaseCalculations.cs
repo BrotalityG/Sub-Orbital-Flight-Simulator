@@ -42,6 +42,7 @@ namespace Calculator {
         private static float G = 6.67430f * Mathf.Pow(10, -11); // This is in m^3/(kg*s^2)
 
         // These will be visible to other classes.
+        private float fuel = 100f;
         [SerializeField]
         protected float DragCoefficient = 1f;
         [SerializeField]
@@ -91,6 +92,16 @@ namespace Calculator {
             ASL = transform.position.y;
         }
 
+        public float getFuel()
+        {
+            return fuel;
+        }
+
+        public float setFuel(float fuel)
+        {
+            this.fuel = fuel;
+            return fuel;
+        }
         public float getIAS()
         {
             return AirSpeed;
@@ -121,10 +132,11 @@ namespace Calculator {
             return MachNumber;
         }
 
-        // Update is called once per frame
+      // Update is called once per frame
         void FixedUpdate()
         {
             ASL = transform.position.y+100000;
+
 
             // 100,000 meters is the maximum altitude for the atmosphere.
             if (ASL < 100000) {

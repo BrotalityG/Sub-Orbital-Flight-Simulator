@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using Calculator;
 using UnityEngine;
 
-namespace ControlSystem {
-    [AddComponentMenu("Keyboard")]
     public class Keyboard : MonoBehaviour {
         private int RCSRemaining = 500; //Just a placeholder for Sprint 2. Will update as implemented
         [SerializeField]
@@ -36,8 +34,9 @@ namespace ControlSystem {
         // Update is called once per frame
         void Update()
         {
+            gc.setFuel(gc.getFuel() - throttle/ maxThrottle * Time.deltaTime * .1f); // Subtract fuel based on throttle
             HandleInputs();
-        }
+        }   
 
         // FixedUpdate is called once per physics update; run physics here
         void FixedUpdate() {
@@ -79,5 +78,6 @@ namespace ControlSystem {
         {
             return throttle;
         }
+
+
     }
-}

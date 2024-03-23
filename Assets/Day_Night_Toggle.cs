@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class Skybox_DayNightToggle : MonoBehaviour
 {
+    //Constants 
+    private static Color DaySky = new Color(38f/255f, 134f/255f, 164f/255f, 255f/255f);
+    private static Color NightSky = new Color(0f/255f, 0f/255f, 0f/255f, 255f/255f);
+    private static Color DayGround = new Color(82f/255f, 130f/255f, 58f/255f, 255f/255f);
+    private static Color NightGround = new Color(35f/255f, 55f/255f, 24f/255f, 255f/255f);
     // Start is called before the first frame update
-    bool day = true;
-    Color DaySky = new Color(38f/255f, 134f/255f, 164f/255f, 255f/255f);
-    Color NightSky = new Color(0f/255f, 0f/255f, 0f/255f, 255f/255f);
-    Color DayGround = new Color(82f/255f, 130f/255f, 58f/255f, 255f/255f);
-    Color NightGround = new Color(35f/255f, 55f/255f, 24f/255f, 255f/255f);
+    private bool day = true;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -20,6 +22,11 @@ public class Skybox_DayNightToggle : MonoBehaviour
 
     // Update is called once per frame
     void Update()
+    {
+        DayNightToggle();
+    }
+
+    private void DayNightToggle ()
     {
         if (Input.GetKeyDown(KeyCode.Tab)){
             if (day){
