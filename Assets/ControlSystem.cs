@@ -19,6 +19,8 @@ using UnityEngine;
         private float yaw;
         [SerializeField]
         private float IAS;
+        [SerializeField]
+        private bool valRCS = false;
         private float Responsiveness = 100000f;
         private float MaximumThrottle = 5255000f; // According to European Space Agency: https://www.esa.int/Science_Exploration/Human_and_Robotic_Exploration/Space_Shuttle/Shuttle_technical_facts
         private Rigidbody rb;
@@ -72,11 +74,27 @@ using UnityEngine;
             if (Input.GetKey(KeyCode.LeftShift)) throttle += throttleIncrement;
             else if (Input.GetKey(KeyCode.LeftControl)) throttle -= throttleIncrement;
             throttle = Math.Clamp(throttle, 0, maxThrottle);
+
+            if(Input.GetKeyDown(KeyCode.CapsLock)) //Flip flop for now, original hypothesis was incorrect
+            {
+                if(valRCS == true)
+                {
+                    valRCS = false;
+                } else {
+                    valRCS = true;
+                }
+            }
+
         }
 
         public int getThrottle()
         {
             return throttle;
+        }
+
+        public bool getRCS()
+        {
+            return valRCS;
         }
 
 

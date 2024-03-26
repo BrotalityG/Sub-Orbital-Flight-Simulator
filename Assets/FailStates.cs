@@ -43,7 +43,7 @@ public class FailStates : MonoBehaviour
 //          add force to bound downwards
             Debug.Log("ship has reached bounds");
         }
-        else if (alt <= -99999f & rb.velocity.y <= 0){
+        if (alt <= 0f){ //& rb.velocity.y <= 0){
             // gameover scene pause game
             Debug.Log("ship has reached ground");
         }

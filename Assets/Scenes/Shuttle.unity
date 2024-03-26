@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.26644132, g: 0.42888966, b: 0.25956017, a: 1}
+  m_IndirectSpecularColor: {r: 0.30197433, g: 0.4881646, b: 0.4617417, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -317,6 +317,7 @@ GameObject:
   - component: {fileID: 927459454}
   - component: {fileID: 927459458}
   - component: {fileID: 927459459}
+  - component: {fileID: 927459460}
   m_Layer: 0
   m_Name: Shuttle
   m_TagString: Untagged
@@ -381,7 +382,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d8d5f4de47d7a543a1be435923cfe85, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DragCoefficient: 1
+  fuel: 100
+  DragCoefficient: 2.2
   LiftCoefficient: 1
   ASL: 0
   TempK: 288.15
@@ -389,7 +391,7 @@ MonoBehaviour:
   Density: 1.225
   Gravity: 9.819973
   drag: 0
-  AirSpeed: 0
+  AirSpeed: 1000
   GroundSpeed: 0
   Speed: 0
   SpeedDirection: 0
@@ -403,7 +405,7 @@ Transform:
   m_GameObject: {fileID: 927459453}
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -2.1258898, y: -99999, z: -5.1764708}
+  m_LocalPosition: {x: -2.1258898, y: -98000, z: -5.1764708}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -440,6 +442,24 @@ MonoBehaviour:
   shut: {fileID: 927459455}
   keyboard: {fileID: 927459454}
   calculations: {fileID: 927459456}
+--- !u!114 &927459460
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 927459453}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ae6522821812af41a328ba7e4c69e6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rb: {fileID: 0}
+  fuel: 0
+  alt: 0
+  roll: 0
+  pitch: 0
+  yaw: 0
 --- !u!1 &1002111281
 GameObject:
   m_ObjectHideFlags: 0
@@ -647,11 +667,11 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1002111285}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -700, y: -250}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 5, y: -5}
   m_SizeDelta: {x: 400, y: 50}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 0, y: 1}
 --- !u!114 &1894163232
 MonoBehaviour:
   m_ObjectHideFlags: 0

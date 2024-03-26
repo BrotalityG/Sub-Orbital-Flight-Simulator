@@ -42,7 +42,10 @@ namespace Calculator {
         private static float G = 6.67430f * Mathf.Pow(10, -11); // This is in m^3/(kg*s^2)
 
         // These will be visible to other classes.
+        [SerializeField]
         private float fuel = 100f;
+        [SerializeField]
+        private float fuelRCS = 100f;
         [SerializeField]
         protected float DragCoefficient = 1f;
         [SerializeField]
@@ -95,6 +98,11 @@ namespace Calculator {
         public float getFuel()
         {
             return fuel;
+        }
+
+        public float getFuelRCS()
+        {
+            return fuelRCS;
         }
 
         public float setFuel(float fuel)

@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class ACSHUD : MonoBehaviour
 {
-    private int RCSRemaining = 500; //Just a placeholder for Sprint 2. Will update as implemented
+
     [SerializeField]
     protected TextMeshProUGUI hudBasic;
     [SerializeField]
@@ -25,14 +25,40 @@ public class ACSHUD : MonoBehaviour
          UpdateHUD();
     }
 
-    private void UpdateHUD() //Will need to fix. Updates HUD to accurately represent craft's behavior. Need a way to pull from AEPE
+    private void UpdateHUD() //Updates HUD to accurately represent craft's behavior.
     {
         hudBasic.text = "Throttle: " + keyboard.getThrottle() + "%\n";
-        hudBasic.text += "IAS: " + calculations.getIAS() + "km/h\n"; //+ (rb.velocity.magnitude * 3.6f).ToString("F0") + "km/h\n";
-        hudBasic.text += "GS: " + calculations.getGS() + "km/h\n"; //+ ().ToString("F0") + "km/h\n";
-        hudBasic.text += "Fuel: " + calculations.getFuel() + "%\n"; //+ ().ToString("F0") + "km/h\n";
-        hudBasic.text += "Altitude: " + calculations.getAlt() + "m\n";//+ transform.position.y.ToString("F0") + "m";
-        hudBasic.text += "Pitch angle: " + shutAtt.x + "deg\n"; //Need to double check
-        hudBasic.text += "Roll angle: " + shutAtt.z + "deg\n"; //Need to double check axi
+        hudBasic.text += "IAS: " + $"{calculations.getIAS():0.00}" + "km/h\n";
+        if(calculations.getAlt() < 30000f)
+        { 
+            hudBasic.text += "GS: " + $"{calculations.getGS():0.00}" + "km/h\n"; 
+            hudBasic.text += "Mach: " + $"{calculations.getMach():0.00}" + "\n";
+        }
+        if(calculations.getFuel() > 10f)
+        {
+            hudBasic.text += "Fuel: " + $"{calculations.getFuel():0.00}" + "%\n"; 
+        } else if(calculations.getFuel() > 0f) {
+            hudBasic.text += "Fuel: " + $"{calculations.getFuel():0.00}" + "% FUEL LOW\n";
+        } else {
+            hudBasic.text += "NO FUEL REMAINING\n";
+        }
+        if(keyboard.getRCS() == true)
+        {
+            if(calculations.getFuelRCS() > 10f)
+            {
+                hudBasic.text += "RCS fuel: " + $"{calculations.getFuel():0.00}" + "%\n"; 
+            } else if(calculations.getFuelRCS() > 0f) {
+                hudBasic.text += "RCS fuel: " + $"{calculations.getFuel():0.00}" + "% FUEL LOW\n";
+            } else {
+                hudBasic.text += "NO RCS FUEL REMAINING\n";
+            }
+        }
+        if(calculations.getAlt() < 30000f){
+            hudBasic.text += "Altitude: " + calculations.getAlt() + "m\n";
+        } else {
+            hudBasic.text += "Altitude: " + $"{(calculations.getAlt()/1000f):0.00}" + "km\n";
+        }
+        hudBasic.text += "Pitch angle: " + $"{shutAtt.x:0.0}" + "deg\n"; //Need to double check, need to add negative values for over 180deg
+        hudBasic.text += "Roll angle: " + $"{shutAtt.z:0.0}" + "deg\n"; //Need to double check axi
     }
 }
