@@ -73,6 +73,11 @@ using UnityEngine;
             pitch = Input.GetAxis("Pitch");
             yaw = Input.GetAxis("Yaw");
 
+            if(Input.GetKeyDown(KeyCode.T))
+            {
+                gc.toggleFlapPos();
+            }
+
             if(valRCS != true) //Need to double check movement
             {
                 if (Input.GetKey(KeyCode.LeftShift)) throttle += throttleIncrement;
@@ -111,12 +116,12 @@ using UnityEngine;
                 }
 
 
-                if(Input.GetKey(KeyCode.D))
+                if(Input.GetKey(KeyCode.S))
                 {
                     //Rotate X positive
                     rb.AddRelativeTorque(Vector3.right * impulseRCS);
                 }
-                if(Input.GetKey(KeyCode.A))
+                if(Input.GetKey(KeyCode.W))
                 {
                     //Rotate X negative
                     rb.AddRelativeTorque(Vector3.left * impulseRCS);
@@ -131,12 +136,12 @@ using UnityEngine;
                     //Rotate Y negative
                     rb.AddRelativeTorque(Vector3.down * impulseRCS);
                 }
-                if(Input.GetKey(KeyCode.S)) //Need to check for inversion
+                if(Input.GetKey(KeyCode.A)) //Need to check for inversion
                 {
                     //Rotate Z positive
                     rb.AddRelativeTorque(Vector3.forward * impulseRCS);
                 }
-                if(Input.GetKey(KeyCode.W))
+                if(Input.GetKey(KeyCode.D))
                 {
                     //Rotate Z negative
                     rb.AddRelativeTorque(Vector3.back * impulseRCS);

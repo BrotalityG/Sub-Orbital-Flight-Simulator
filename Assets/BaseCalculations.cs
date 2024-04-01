@@ -86,6 +86,9 @@ namespace Calculator {
         [SerializeField]
         private float MachNumber = 0f;
 
+        //Just for flaps
+        private bool flapsEng = false;
+
         // Start is called before the first frame update
         void Start()
         {
@@ -93,6 +96,32 @@ namespace Calculator {
             rb.useGravity = false;
 
             ASL = transform.position.y;
+        }
+
+        public void toggleFlapPos()
+        {
+            if(flapsEng)
+            {
+                flapsEng = false;
+                DragCoefficient -= 0.35f; //arbitrary
+                if(DragCoefficient <= 2.2f)
+                {
+                    DragCoefficient = 2.2f;
+                }
+            } else {
+                flapsEng = true;
+                DragCoefficient += 0.35f;
+            }
+        }
+
+        public int getFlapPos()
+        {
+            if(flapsEng)
+            {
+                return 25;
+            } else {
+                return 0;
+            }
         }
 
         public float getFuel()

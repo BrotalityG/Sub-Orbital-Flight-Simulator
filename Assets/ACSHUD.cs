@@ -58,7 +58,7 @@ public class ACSHUD : MonoBehaviour
         } else {
             hudBasic.text += "Altitude: " + $"{(calculations.getAlt()/1000f):0.00}" + "km\n";
         }
-        hudBasic.text += "Flap angle: \n"; //Populate when possible
+        hudBasic.text += "Flap angle: " + calculations.getFlapPos() +  "deg\n"; //Populate when possible
         hudBasic.text += "Pitch angle: " + $"{shutAtt.x:0.0}" + "deg\n"; //Need to double check, need to add negative values for over 180deg
         hudBasic.text += "Roll angle: " + $"{shutAtt.z:0.0}" + "deg\n"; //Need to double check axi
     }
