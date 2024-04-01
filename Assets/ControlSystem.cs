@@ -21,6 +21,8 @@ using UnityEngine;
         private float IAS;
         [SerializeField]
         private bool valRCS = false;
+        [SerializeField]
+        private float impulseRCS = 1179.561615048318f; //Need to verify, current value is in newton meters
         private float Responsiveness = 100000f;
         private float MaximumThrottle = 5255000f; // According to European Space Agency: https://www.esa.int/Science_Exploration/Human_and_Robotic_Exploration/Space_Shuttle/Shuttle_technical_facts
         private Rigidbody rb;
@@ -71,8 +73,76 @@ using UnityEngine;
             pitch = Input.GetAxis("Pitch");
             yaw = Input.GetAxis("Yaw");
 
-            if (Input.GetKey(KeyCode.LeftShift)) throttle += throttleIncrement;
-            else if (Input.GetKey(KeyCode.LeftControl)) throttle -= throttleIncrement;
+            if(valRCS != true) //Need to double check movement
+            {
+                if (Input.GetKey(KeyCode.LeftShift)) throttle += throttleIncrement;
+                else if (Input.GetKey(KeyCode.LeftControl)) throttle -= throttleIncrement;
+            } else {
+                //Need to populate with movement
+                if(Input.GetKey(KeyCode.LeftShift))
+                {
+                    //Translate X positive
+                    rb.AddRelativeForce(Vector3.forward * impulseRCS); //need to find RCS impulse
+                } 
+                if(Input.GetKey(KeyCode.LeftControl))
+                {
+                    //Translate X negative
+                    rb.AddRelativeForce(Vector3.back * impulseRCS);
+                }
+                if(Input.GetKey(KeyCode.R))
+                {
+                    //Translate Y positive
+                    rb.AddRelativeForce(Vector3.up* impulseRCS);
+                }
+                if(Input.GetKey(KeyCode.F))
+                {
+                    //Translate Y negative
+                    rb.AddRelativeForce(Vector3.down * impulseRCS);
+                }
+                if(Input.GetKey(KeyCode.X))
+                {
+                    //Translate Z positive
+                    rb.AddRelativeForce(Vector3.right * impulseRCS);
+                }
+                if(Input.GetKey(KeyCode.Z)) //Need to confirm
+                {
+                    //Translate Z negative
+                    rb.AddRelativeForce(Vector3.left * impulseRCS);
+                }
+
+
+                if(Input.GetKey(KeyCode.D))
+                {
+                    //Rotate X positive
+                    rb.AddRelativeTorque(Vector3.right * impulseRCS);
+                }
+                if(Input.GetKey(KeyCode.A))
+                {
+                    //Rotate X negative
+                    rb.AddRelativeTorque(Vector3.left * impulseRCS);
+                }
+                if(Input.GetKey(KeyCode.E))
+                {
+                    //Rotate Y positive
+                    rb.AddRelativeTorque(Vector3.up * impulseRCS);
+                }
+                if(Input.GetKey(KeyCode.Q))
+                {
+                    //Rotate Y negative
+                    rb.AddRelativeTorque(Vector3.down * impulseRCS);
+                }
+                if(Input.GetKey(KeyCode.S)) //Need to check for inversion
+                {
+                    //Rotate Z positive
+                    rb.AddRelativeTorque(Vector3.forward * impulseRCS);
+                }
+                if(Input.GetKey(KeyCode.W))
+                {
+                    //Rotate Z negative
+                    rb.AddRelativeTorque(Vector3.back * impulseRCS);
+                }
+
+            }
             throttle = Math.Clamp(throttle, 0, maxThrottle);
 
             if(Input.GetKeyDown(KeyCode.CapsLock)) //Flip flop for now, original hypothesis was incorrect
@@ -84,7 +154,6 @@ using UnityEngine;
                     valRCS = true;
                 }
             }
-
         }
 
         public int getThrottle()

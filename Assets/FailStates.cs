@@ -39,11 +39,11 @@ public class FailStates : MonoBehaviour
         alt = calc.getAlt();
 
 
-        if (alt >= 50000f) {
+        if (alt >= 150000f) {
 //          add force to bound downwards
             Debug.Log("ship has reached bounds");
         }
-        if (alt <= 0f){ //& rb.velocity.y <= 0){
+        if (alt <= 5f){ //& rb.velocity.y <= 0){
             // gameover scene pause game
             Debug.Log("ship has reached ground");
         }
