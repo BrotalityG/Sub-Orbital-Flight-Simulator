@@ -32,6 +32,7 @@
 using System;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 
 // g = G(m1*m2)/r^2 - This is the formula for the force of gravity between two objects, where m is kg and r is meters.
@@ -47,7 +48,7 @@ namespace Calculator {
         [SerializeField]
         private float fuelRCS = 100f;
         [SerializeField]
-        protected float DragCoefficient = 1f;
+        protected float DragCoefficient = 2.2f;
         [SerializeField]
         protected float LiftCoefficient = 1f;
         [SerializeField]
@@ -176,7 +177,7 @@ namespace Calculator {
             }
 
             Speed = rb.velocity.magnitude;
-            AirSpeed = projection.magnitude;
+            AirSpeed = projection.magnitude * SpeedDirection;
             GroundSpeed = AirSpeed / (Density / 1.225f);
             if (float.IsNaN(GroundSpeed)) {
                 GroundSpeed = 0f;
@@ -215,16 +216,8 @@ namespace Calculator {
             // Apply the forces.
             rb.AddForce(rb.velocity.normalized * -drag, ForceMode.Force);
             rb.AddForce(transform.up * lift, ForceMode.Force);
-
-            // //! Normal force is not working as intended, so it is commented out for now.
-            // // Get normal force:
-            // float angle = Mathf.Acos(Vector3.Dot(transform.forward, rb.velocity.normalized)/(rb.velocity.normalized.magnitude*transform.forward.magnitude));
-
-            // float normal = lift*Mathf.Cos(angle) + drag*Mathf.Sin(angle);
-            // print("Lift: " + lift + " Drag: " + drag + " Angle: " + angle + " Normal: " + normal);
-
-            // // Apply the normal force.
-            // rb.AddRelativeForce(Vector3.up * normal, ForceMode.Force);
+            
+            CalculateAngularDrag();
         }
 
         private void CalculateGravity()
@@ -268,6 +261,17 @@ namespace Calculator {
             {
                 Debug.Log(e);
             }
+        }
+
+        private void CalculateAngularDrag()
+        {
+            // Calculate the angle
+            float dot = Vector3.Dot(rb.velocity.normalized, transform.forward);
+
+            // Calculate the vector of motion
+            Vector3 motion = (rb.velocity.normalized-transform.forward)*dot;
+
+            rb.AddRelativeTorque(motion*(drag/1000));
         }
 
         private void CalculateDrag()
