@@ -68,6 +68,7 @@ namespace Calculator {
         [SerializeField]
         private float drag = 0f;
         private float lift = 0f;
+        private float Responsiveness = 100000f;
         private float newtonWeight = 0f; // This is in Newtons
 
         // These will be private so only this class can edit/view it.
@@ -178,7 +179,7 @@ namespace Calculator {
 
             Speed = rb.velocity.magnitude;
             AirSpeed = projection.magnitude * SpeedDirection;
-            GroundSpeed = AirSpeed / (Density / 1.225f);
+            GroundSpeed = Speed / (Density / 1.225f);
             if (float.IsNaN(GroundSpeed)) {
                 GroundSpeed = 0f;
             }
@@ -217,6 +218,7 @@ namespace Calculator {
             rb.AddForce(rb.velocity.normalized * -drag, ForceMode.Force);
             rb.AddForce(transform.up * lift, ForceMode.Force);
             
+            // Calculate and apply angular drag.
             CalculateAngularDrag();
         }
 
@@ -265,13 +267,8 @@ namespace Calculator {
 
         private void CalculateAngularDrag()
         {
-            // Calculate the angle
-            float dot = Vector3.Dot(rb.velocity.normalized, transform.forward);
-
-            // Calculate the vector of motion
-            Vector3 motion = (rb.velocity.normalized-transform.forward)*dot;
-
-            rb.AddRelativeTorque(motion*(drag/1000));
+            // idfk how this works but it does
+            rb.AddTorque(-rb.angularVelocity * Responsiveness * (Density/1.225f));
         }
 
         private void CalculateDrag()
