@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Calculator;
 using UnityEngine;
 
     public class Keyboard : MonoBehaviour {
