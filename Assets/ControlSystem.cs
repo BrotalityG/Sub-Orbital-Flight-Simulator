@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Calculator;
 using UnityEngine;
+using TMPro;
 
     public class Keyboard : MonoBehaviour {
         private int RCSRemaining = 500; //Just a placeholder for Sprint 2. Will update as implemented
@@ -27,6 +28,10 @@ using UnityEngine;
         private float MaximumThrottle = 5255000f; // According to European Space Agency: https://www.esa.int/Science_Exploration/Human_and_Robotic_Exploration/Space_Shuttle/Shuttle_technical_facts
         private Rigidbody rb;
         private GeneralCalculations gc;
+        [SerializeField]
+        private TextMeshProUGUI PausedText;
+
+        public bool PausedBoolean = false;
 
         // Start is called before the first frame update
         void Start()
@@ -40,6 +45,25 @@ using UnityEngine;
         {
             gc.setFuel(gc.getFuel() - throttle/ maxThrottle * Time.deltaTime * .1f); // Subtract fuel based on throttle
             HandleInputs();
+
+
+             if (Input.GetKeyDown(KeyCode.P)) // Pause the game
+            {
+                if (PausedBoolean == false)
+                {
+                    Time.timeScale = 0;
+                    PausedBoolean = true;
+                    PausedText.text = "PAUSED";
+                }
+                else
+                {
+                    Time.timeScale = 1;
+                    PausedBoolean = false;
+                    PausedText.text = " ";
+
+                }
+            }
+
         }   
 
         // FixedUpdate is called once per physics update; run physics here

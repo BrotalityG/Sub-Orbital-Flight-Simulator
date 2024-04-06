@@ -6,13 +6,15 @@ using UnityEditor.Callbacks;
 using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
+using TMPro;
 
 public class FailStates : MonoBehaviour
 {
     public Rigidbody rb;
     private Keyboard controlKF;
     private GeneralCalculations calc;
+    [SerializeField]
+    private TextMeshProUGUI CrashUI;
     public float fuel;
     public float alt;
     public float roll;
@@ -40,12 +42,13 @@ public class FailStates : MonoBehaviour
 
 
         if (alt >= 150000f) {
-//          add force to bound downwards
             Debug.Log("ship has reached bounds");
+            rb.transform.position = new Vector3(rb.transform.position.x, 50000f, rb.transform.position.z);
         }
         if (alt <= 5f){ //& rb.velocity.y <= 0){
             // gameover scene pause game
-            Debug.Log("ship has reached ground");
+            CrashUI.text = "CRASHED";
+            Time.timeScale = 0;
         }
         if (fuel <= 0) {
             Debug.Log("You are out of fuel");
