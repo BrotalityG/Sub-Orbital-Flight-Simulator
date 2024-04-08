@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 [AddComponentMenu("ACS/HUD")]
 
@@ -30,8 +31,8 @@ public class ACSHUD : MonoBehaviour
         hudBasic.text += "IAS: " + $"{calculations.getIAS():0.00}" + "km/h\n";
         if(calculations.getAlt() < 30000f)
         { 
-            hudBasic.text += "GS: " + $"{calculations.getGS():0.00}" + "km/h\n"; 
-            hudBasic.text += "Mach: " + $"{calculations.getMach():0.00}" + "\n";
+            hudBasic.text += "GS: " + $"{calculations.getGS():0.00}" + "km/h\n"; //Need to double check
+            hudBasic.text += "Mach: " + $"{calculations.getMach():0.00}" + "\n"; //Need to double check
         }
         if(calculations.getFuel() > 10f)
         {
@@ -45,9 +46,9 @@ public class ACSHUD : MonoBehaviour
         {
             if(calculations.getFuelRCS() > 10f)
             {
-                hudBasic.text += "RCS fuel: " + $"{calculations.getFuel():0.00}" + "%\n"; 
+                hudBasic.text += "RCS fuel: " + $"{calculations.getFuelRCS():0.00}" + "%\n"; 
             } else if(calculations.getFuelRCS() > 0f) {
-                hudBasic.text += "RCS fuel: " + $"{calculations.getFuel():0.00}" + "% FUEL LOW\n";
+                hudBasic.text += "RCS fuel: " + $"{calculations.getFuelRCS():0.00}" + "% FUEL LOW\n";
             } else {
                 hudBasic.text += "NO RCS FUEL REMAINING\n";
             }
@@ -57,6 +58,7 @@ public class ACSHUD : MonoBehaviour
         } else {
             hudBasic.text += "Altitude: " + $"{(calculations.getAlt()/1000f):0.00}" + "km\n";
         }
+        hudBasic.text += "Flap angle: " + calculations.getFlapPos() +  "deg\n"; //Populate when possible
         hudBasic.text += "Pitch angle: " + $"{shutAtt.x:0.0}" + "deg\n"; //Need to double check, need to add negative values for over 180deg
         hudBasic.text += "Roll angle: " + $"{shutAtt.z:0.0}" + "deg\n"; //Need to double check axi
     }

@@ -93,28 +93,63 @@ public class GeneralCalculations : MonoBehaviour
         rb = GetComponent<Rigidbody>(); // Get the rigidbody so we don't need to automatically assign it.
         rb.useGravity = false;
 
+
         ASL = transform.position.y;
     }
 
-    public float getFuel()
-    {
-        return fuel;
-    }
+
+        public void toggleFlapPos() //REDO
+        {
+            if(flapsEng)
+            {
+                flapsEng = false;
+                DragCoefficient -= 0.35f; //arbitrary
+                if(DragCoefficient <= 2.2f)
+                {
+                    DragCoefficient = 2.2f;
+                }
+            } else {
+                flapsEng = true;
+                DragCoefficient += 0.35f;
+            }
+        }
+
+        public int getFlapPos()
+        {
+            if(flapsEng)
+            {
+                return 25;
+            } else {
+                return 0;
+            }
+        }
+
+        public float getFuel()
+        {
+            return fuel;
+        }
 
     public float getFuelRCS()
     {
         return fuelRCS;
     }
 
-    public float setFuel(float fuel)
-    {
-        this.fuel = fuel;
-        return fuel;
-    }
-    public float getIAS()
-    {
-        return AirSpeed;
-    }
+
+
+        public void updateRCSFuel()
+        {
+            fuelRCS -= 0.001f;
+        }
+
+        public float setFuel(float fuel)
+        {
+            this.fuel = fuel;
+            return fuel;
+        }
+        public float getIAS()
+        {
+            return AirSpeed;
+        }
 
     public float getSpeed()
     {

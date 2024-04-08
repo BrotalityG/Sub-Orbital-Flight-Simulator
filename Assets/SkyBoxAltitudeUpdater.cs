@@ -24,7 +24,7 @@ public class Skybox_AtmosphereAdj : MonoBehaviour
 
     private void AtmosphereUpdater ()
     {
-                if (gameObject.transform.position.y > -(Transition_Distance) && gameObject.transform.position.y < Space_Altitude){
+        if (gameObject.transform.position.y > -(Transition_Distance) && gameObject.transform.position.y < Space_Altitude){
 
             RenderSettings.skybox.SetFloat("_AtmosphereThickness", Atmos_Thick_Start*((Transition_Distance-(Transition_Distance-Mathf.Abs(gameObject.transform.position.y)))/Transition_Distance));
 
@@ -32,6 +32,10 @@ public class Skybox_AtmosphereAdj : MonoBehaviour
 
             RenderSettings.skybox.SetFloat("_AtmosphereThickness", 0.0f);
 
+        }else {
+
+            RenderSettings.skybox.SetFloat("_AtmosphereThickness", Atmos_Thick_Start);
+            
         }
     }
 }
