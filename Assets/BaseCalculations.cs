@@ -134,6 +134,11 @@ namespace Calculator {
             return fuelRCS;
         }
 
+        public void updateRCSFuel()
+        {
+            fuelRCS -= 0.001f;
+        }
+
         public float setFuel(float fuel)
         {
             this.fuel = fuel;
