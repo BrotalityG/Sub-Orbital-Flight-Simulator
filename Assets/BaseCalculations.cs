@@ -31,6 +31,7 @@
 
 using System;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
@@ -75,7 +76,6 @@ public class GeneralCalculations : MonoBehaviour
     [SerializeField]
     private float crossSectionalArea = 1f;
     private Rigidbody rb;
-
     [SerializeField]
     private float AirSpeed = 0f;
     [SerializeField]
@@ -86,6 +86,8 @@ public class GeneralCalculations : MonoBehaviour
     private int SpeedDirection = 0;
     [SerializeField]
     private float MachNumber = 0f;
+    private float flapsEng = 0;
+    private float spBreakEng = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -97,59 +99,71 @@ public class GeneralCalculations : MonoBehaviour
         ASL = transform.position.y;
     }
 
-
-        public void toggleFlapPos() //REDO
+    public void toggleFlapPos()
+    {
+        if(flapsEng == 1)
         {
-            if(flapsEng)
-            {
-                flapsEng = false;
-                DragCoefficient -= 0.35f; //arbitrary
-                if(DragCoefficient <= 2.2f)
-                {
-                    DragCoefficient = 2.2f;
-                }
-            } else {
-                flapsEng = true;
-                DragCoefficient += 0.35f;
-            }
+             flapsEng = 0;
+        } else {
+            flapsEng = 1;
         }
+    }
 
-        public int getFlapPos()
+     public void toggleBrakePos()
+    {
+        if(spBreakEng == 1)
         {
-            if(flapsEng)
-            {
-                return 25;
-            } else {
-                return 0;
-            }
+            spBreakEng = 0;
+        } else {
+            spBreakEng= 1;
         }
+    }
 
-        public float getFuel()
+    public bool getABPos()
+    {
+        if(spBreakEng == 1)
         {
-            return fuel;
+            return true;
+        } else {
+            return false;
         }
+    }
+
+     public float getFlapPos()
+    {
+        if(flapsEng == 1)
+        {
+            return 22.55f;
+        } else {
+            return 0;
+        }
+    }
+
+    public float getFuel()
+    {
+        return fuel;
+    }
 
     public float getFuelRCS()
     {
         return fuelRCS;
     }
 
+    public void updateRCSFuel()
+    {
+        fuelRCS -= 0.001f;
+        rb.mass -= 3.2f;
+    }
 
-
-        public void updateRCSFuel()
-        {
-            fuelRCS -= 0.001f;
-        }
-
-        public float setFuel(float fuel)
-        {
-            this.fuel = fuel;
-            return fuel;
-        }
-        public float getIAS()
-        {
-            return AirSpeed;
-        }
+    public float setFuel(float fuel)
+    {
+        this.fuel = fuel;
+        return fuel;
+    }
+    public float getIAS()
+    {
+        return AirSpeed;
+    }
 
     public float getSpeed()
     {
@@ -286,14 +300,20 @@ public class GeneralCalculations : MonoBehaviour
     }
 
     private void CalculateCrossSection()
-    {   
-        float frontal = Mathf.Abs(Vector3.Dot(rb.velocity.normalized, transform.forward)) * 48.38f;
-        float up = Mathf.Abs(Vector3.Dot(rb.velocity.normalized, transform.up)) * 439.46f;
-        float right = Mathf.Abs(Vector3.Dot(rb.velocity.normalized, transform.right)) * 313.83f;
+    {   float varUp = 426.81f + (6.91f*1.83f*Mathf.Cos(math.PI/180f*22.55f)*flapsEng);
+        float varFront = 48.38f + (6.91f*1.83f*Mathf.Sin(math.PI/180f*22.55f)*flapsEng);
+        float varRight = 313.83f + (9.03f*spBreakEng*2);
+
+        float frontal = Mathf.Abs(Vector3.Dot(rb.velocity.normalized, transform.forward)) * varFront;
+
+        float up = Mathf.Abs(Vector3.Dot(rb.velocity.normalized, transform.up)) * varUp;
+       
+        float right = Mathf.Abs(Vector3.Dot(rb.velocity.normalized, transform.right)) * varRight;
 
         float approx = frontal + up + right;
 
         crossSectionalArea = approx;
+       
     }
 
     private void CalculateAngularDrag()

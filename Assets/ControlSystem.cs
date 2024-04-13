@@ -102,6 +102,11 @@ using TMPro;
                 gc.toggleFlapPos();
             }
 
+            if(Input.GetKeyDown(KeyCode.B))
+            {
+                gc.toggleBrakePos();
+            }
+
             if(valRCS != true) //Need to double check movement
             {
                 if (Input.GetKey(KeyCode.LeftShift)) throttle += throttleIncrement;
