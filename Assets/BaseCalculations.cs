@@ -94,9 +94,7 @@ public class GeneralCalculations : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>(); // Get the rigidbody so we don't need to automatically assign it.
         rb.useGravity = false;
-
-
-        ASL = transform.position.y;
+        ASL = 100f;
     }
 
     public void toggleFlapPos()
@@ -124,6 +122,7 @@ public class GeneralCalculations : MonoBehaviour
         if(spBreakEng == 1)
         {
             return true;
+
         } else {
             return false;
         }

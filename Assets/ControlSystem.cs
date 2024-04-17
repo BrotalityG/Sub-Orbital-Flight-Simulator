@@ -30,12 +30,19 @@ using TMPro;
         private GeneralCalculations gc;
         [SerializeField]
         private TextMeshProUGUI PausedText;
+        [SerializeField]
+        private TextMeshProUGUI HelpUIText;
+
+        [SerializeField]
+        private GameObject EscapeMenu;
 
         public bool PausedBoolean = false;
+        public bool helpBool = false;
 
         // Start is called before the first frame update
         void Start()
         {
+            Time.timeScale = 0;
             rb = GetComponent<Rigidbody>(); // Get the rigidbody so we don't need to manually assign it.
             gc = GetComponent<GeneralCalculations>(); // Get the GeneralCalculations script so we don't need to manually assign it.
         }
@@ -47,22 +54,32 @@ using TMPro;
             HandleInputs();
 
 
-             if (Input.GetKeyDown(KeyCode.P)) // Pause the game
+             if (Input.GetKeyDown(KeyCode.Escape)) // Pause the game
             {
                 if (PausedBoolean == false)
                 {
+                    EscapeMenu.SetActive(true);
                     Time.timeScale = 0;
                     PausedBoolean = true;
-                    PausedText.text = "PAUSED";
                 }
                 else
                 {
+                    EscapeMenu.SetActive(false);
                     Time.timeScale = 1;
                     PausedBoolean = false;
-                    PausedText.text = " ";
 
                 }
             }
+
+            if (Input.GetKeyDown(KeyCode.H)) {
+                if (helpBool == false) {
+                    helpBool = true;
+                HelpUIText.text = "Controls: \n W - Pitch Up \n S - Pitch Down \n A - Roll Left \n D - Roll Right \n Q - Yaw Left \n E - Yaw Right \n Left Shift - Increase Throttle \n Left Control - Decrease Throttle \n T - Toggle Flaps \n Caps Lock - Toggle RCS \n R - RCS Translate Up \n F - RCS Translate Down \n X - RCS Translate Right \n Z - RCS Translate Left \n W - RCS Translate Forward \n S - RCS Translate Backward \n E - RCS Rotate Yaw Right \n Q - RCS Rotate Yaw Left \n A - RCS Rotate Roll Left \n D - RCS Rotate Roll Right \n R - RCS Rotate Pitch Up \n F - RCS Rotate Pitch Down";
+                } else {
+                    helpBool = false;
+                    HelpUIText.text = " ";
+                }
+        }
 
         }   
 
@@ -97,10 +114,12 @@ using TMPro;
             pitch = Input.GetAxis("Pitch");
             yaw = Input.GetAxis("Yaw");
 
+/**
             if(Input.GetKeyDown(KeyCode.T))
             {
                 gc.toggleFlapPos();
             }
+**/
 
             if(Input.GetKeyDown(KeyCode.B))
             {
