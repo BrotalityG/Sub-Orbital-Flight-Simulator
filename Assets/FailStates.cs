@@ -44,7 +44,7 @@ public class FailStates : MonoBehaviour
 
         if (alt >= 150000f) {
             Debug.Log("ship has reached bounds");
-            rb.transform.position = new Vector3(rb.transform.position.x, 50000f, rb.transform.position.z);
+            rb.AddForce(0f, -5255000f*1.5f*((alt-150000f)/50000f), 0f);
 
         }
         if (alt <= 5f && rb.velocity.y <= 0){
