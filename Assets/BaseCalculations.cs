@@ -88,6 +88,8 @@ public class GeneralCalculations : MonoBehaviour
     private float MachNumber = 0f;
     private float flapsEng = 0;
     private float spBreakEng = 0;
+    [SerializeField]
+    private float yCount = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -191,9 +193,21 @@ public class GeneralCalculations : MonoBehaviour
 
     // Update is called once per frame
     void FixedUpdate()
-    {
-        ASL = transform.position.y+100000;
+    {   
+        float pos = transform.position.y;
 
+        if (pos <= 10000f) {
+            //transform.SetPositionAndRotation(new Vector3(transform.position.x, 0, transform.position.z), transform.rotation);
+            yCount++;
+            print("up");
+        } else if (pos >= -10000f) {
+            //transform.SetPositionAndRotation(new Vector3(transform.position.x, 0, transform.position.z), transform.rotation);
+            yCount--;
+            print("down");
+        }
+
+        //ASL = 10000f*yCount + transform.position.y;
+        ASL = transform.position.y;
 
         // 100,000 meters is the maximum altitude for the atmosphere.
         if (ASL < 100000) {
