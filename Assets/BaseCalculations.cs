@@ -88,6 +88,8 @@ public class GeneralCalculations : MonoBehaviour
     private float MachNumber = 0f;
     private float flapsEng = 0;
     private float spBreakEng = 0;
+    [SerializeField]
+    private float yCount = 2; // Measured in 10s of KM
 
     // Start is called before the first frame update
     void Start()
@@ -192,7 +194,15 @@ public class GeneralCalculations : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        ASL = transform.position.y+100000;
+        if (transform.position.y >= 10000f) {
+            transform.position = new Vector3(transform.position.x, 0f, transform.position.z);
+            yCount++;
+        } else if (transform.position.y <= -10000f) {
+            transform.position = new Vector3(transform.position.x, 0f, transform.position.z);
+            yCount--;
+        }
+
+        ASL = 10000f*yCount + transform.position.y;
 
 
         // 100,000 meters is the maximum altitude for the atmosphere.
@@ -226,7 +236,7 @@ public class GeneralCalculations : MonoBehaviour
 
         Speed = rb.velocity.magnitude;
         AirSpeed = projection.magnitude * SpeedDirection;
-        GroundSpeed = Speed / (Density / 1.225f);
+        GroundSpeed = Speed * (ASL/304.8f) * 0.02f + Speed;
         if (float.IsNaN(GroundSpeed)) {
             GroundSpeed = 0f;
         }

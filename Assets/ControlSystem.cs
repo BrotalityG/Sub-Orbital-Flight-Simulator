@@ -10,7 +10,7 @@ using TMPro;
         private int throttleIncrement = 1;
         private int maxThrottle = 100;
         [SerializeField]
-        private int throttle;
+        private int throttle = 25;
         [SerializeField]
         private float roll;
         [SerializeField]

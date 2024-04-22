@@ -12,9 +12,27 @@ public class AHS_CTL : MonoBehaviour
         Shuttle = AH.GetComponentInParent<Rigidbody>();
     }
 
+    private float GetDirection(float dot) {
+        float SpeedDirection = 0;
+
+        switch (dot) {
+            case float n when n > 0:
+                SpeedDirection = 1;
+                break;
+            case float n when n < 0:
+                SpeedDirection = -1;
+                break;
+            case float n when n == 0:
+                SpeedDirection = 0;
+                break;
+        }
+
+        return SpeedDirection;
+    }
+
     // Update is called once per frame
     void Update()
     {
-        AH.transform.eulerAngles = new Vector3 (2*Shuttle.transform.eulerAngles.x, 0, -Shuttle.transform.eulerAngles.z);
+        AH.transform.localEulerAngles = new Vector3 (Shuttle.transform.eulerAngles.x, 90, -Shuttle.transform.eulerAngles.z);
     }
 }
