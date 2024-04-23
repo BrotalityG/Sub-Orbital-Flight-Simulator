@@ -63,7 +63,7 @@ public class FailStates : MonoBehaviour
             Debug.Log("You are out of fuel");
             //stop forces
         }
-        if (rb.transform.position.x >= 100000f || rb.transform.position.x <= -100000f || rb.transform.position.z >= 100000f || rb.transform.position.z <= -100000f) {
+        if (rb.transform.position.x >= 10000f || rb.transform.position.x <= -10000f || rb.transform.position.z >= 10000f || rb.transform.position.z <= -10000f) {
             Debug.Log("ship has reached bounds");
             rb.transform.position = new Vector3(0f, rb.transform.position.y, 0f);
         }
