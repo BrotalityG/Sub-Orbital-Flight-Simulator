@@ -28,10 +28,10 @@ public class ACSHUD : MonoBehaviour
     private void UpdateHUD() //Updates HUD to accurately represent craft's behavior.
     {
         hudBasic.text = "Throttle: " + keyboard.getThrottle() + "%\n";
-        hudBasic.text += "IAS: " + $"{calculations.getIAS():0.00}" + "km/h\n";
+        hudBasic.text += "IAS: " + $"{calculations.getIAS():0.00}" + "m/s\n";
         if(calculations.getAlt() < 30000f)
         { 
-            hudBasic.text += "GS: " + $"{calculations.getGS():0.00}" + "km/h\n"; //Need to double check
+            hudBasic.text += "GS: " + $"{calculations.getGS():0.00}" + "m/s\n"; //Need to double check
             hudBasic.text += "Mach: " + $"{calculations.getMach():0.00}" + "\n"; //Need to double check
         }
         if(calculations.getFuel() > 10f)

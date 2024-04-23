@@ -35,6 +35,7 @@ using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
+using TMPro;
 
 public class GeneralCalculations : MonoBehaviour
 {
@@ -90,13 +91,18 @@ public class GeneralCalculations : MonoBehaviour
     private float spBreakEng = 0;
     [SerializeField]
     private float yCount = 2; // Measured in 10s of KM
+    private AudioSource crashPipe;
+    private TextMeshProUGUI CrashUI;
 
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>(); // Get the rigidbody so we don't need to automatically assign it.
         rb.useGravity = false;
-        ASL = 100f;
+
+        crashPipe = GetComponent<AudioSource>();
+        CrashUI = transform.parent.Find("CRASHED").GetComponent<TextMeshProUGUI>();
+
     }
 
     public void toggleFlapPos()
@@ -159,6 +165,7 @@ public class GeneralCalculations : MonoBehaviour
     public float setFuel(float fuel)
     {
         this.fuel = fuel;
+        rb.mass = 72000 + 28000*(fuel/100f);
         return fuel;
     }
     public float getIAS()
@@ -204,18 +211,16 @@ public class GeneralCalculations : MonoBehaviour
 
         ASL = 10000f*yCount + transform.position.y;
 
-        if (pos <= 10000f) {
-            //transform.SetPositionAndRotation(new Vector3(transform.position.x, 0, transform.position.z), transform.rotation);
-            yCount++;
-            print("up");
-        } else if (pos >= -10000f) {
-            //transform.SetPositionAndRotation(new Vector3(transform.position.x, 0, transform.position.z), transform.rotation);
-            yCount--;
-            print("down");
+        if (rb.transform.position.x >= 10000f || rb.transform.position.x <= -10000f) {
+            rb.transform.position = new Vector3(0f, rb.transform.position.y, rb.transform.position.z);
+        } else if (rb.transform.position.z >= 10000f || rb.transform.position.z <= -10000f) {
+            rb.transform.position = new Vector3(rb.transform.position.x, rb.transform.position.y, 0f);
         }
 
-        //ASL = 10000f*yCount + transform.position.y;
-        ASL = transform.position.y;
+        if (ASL >= 150000f) {
+            Debug.Log("ship has reached bounds");
+            rb.AddForce(0f, -5255000f*1.5f*((ASL-150000f)/50000f), 0f);
+        }
 
         // 100,000 meters is the maximum altitude for the atmosphere.
         if (ASL < 100000) {
@@ -254,6 +259,13 @@ public class GeneralCalculations : MonoBehaviour
         }
 
         MachNumber = Speed/(331f*Mathf.Sqrt(TempK/273.15f));
+
+        if (ASL <= 5f && rb.velocity.y <= 1 && Time.timeScale != 0){
+            //! Gameover scene pause game
+            CrashUI.text = "CRASHED";
+            Time.timeScale = 0;
+            crashPipe.Play();
+        }
     }
 
     private void CalculateAtmosphere()
