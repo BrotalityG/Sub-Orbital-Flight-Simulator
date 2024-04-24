@@ -15,6 +15,6 @@ public class AHS_CTL : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        AH.transform.eulerAngles = new Vector3 (2*Shuttle.transform.eulerAngles.x, 0, -Shuttle.transform.eulerAngles.z);
+        AH.transform.localEulerAngles = new Vector3 (Shuttle.transform.eulerAngles.x, 90, -Shuttle.transform.eulerAngles.z);
     }
 }
