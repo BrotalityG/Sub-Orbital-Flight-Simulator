@@ -72,10 +72,30 @@ public class Keyboard : MonoBehaviour {
             }
         }
 
+        // Current control list (aside from dynamic roll pitch & yaw from unity.)
+    /**
+        T flap
+        B brake
+        Shift & Ctrl throttle & RCS forward/backward
+        R RCS up
+        F RCS down
+        X RCS right
+        Z RCS left
+        S RCS pitch up
+        W RCS pitch down
+        E RCS yaw right
+        Q RCS yaw left
+        A RCS roll left
+        D RCS roll right
+        CapsLock toggle RCS
+        H show help menu
+        ESC pause
+    **/
+
         if (Input.GetKeyDown(KeyCode.H)) {
             if (helpBool == false) {
                 helpBool = true;
-            HelpUIText.text = "Controls: \n W - Pitch Up \n S - Pitch Down \n A - Roll Left \n D - Roll Right \n Q - Yaw Left \n E - Yaw Right \n Left Shift - Increase Throttle \n Left Control - Decrease Throttle \n T - Toggle Flaps \n Caps Lock - Toggle RCS \n R - RCS Translate Up \n F - RCS Translate Down \n X - RCS Translate Right \n Z - RCS Translate Left \n W - RCS Translate Forward \n S - RCS Translate Backward \n E - RCS Rotate Yaw Right \n Q - RCS Rotate Yaw Left \n A - RCS Rotate Roll Left \n D - RCS Rotate Roll Right \n R - RCS Rotate Pitch Up \n F - RCS Rotate Pitch Down";
+                HelpUIText.text = "Controls: \n W - Pitch Up \n S - Pitch Down \n A - Roll Left \n D - Roll Right \n Q - Yaw Left \n E - Yaw Right \n Left Shift - Increase Throttle/RCS Forward \n Ctrl - Decrease Throttle/RCS Backward \n R - RCS Up \n F - RCS Down \n X - RCS Right \n Z - RCS Left \n T - Toggle Flaps \n B - Toggle Brakes \n CapsLock - Toggle RCS \n H - Toggle Help Menu \n ESC - Pause";
             } else {
                 helpBool = false;
                 HelpUIText.text = " ";
@@ -119,12 +139,11 @@ public class Keyboard : MonoBehaviour {
         pitch = Input.GetAxis("Pitch");
         yaw = Input.GetAxis("Yaw");
 
-/**
         if(Input.GetKeyDown(KeyCode.T))
         {
             gc.toggleFlapPos();
         }
-**/
+
 
         if(Input.GetKeyDown(KeyCode.B))
         {
@@ -143,75 +162,75 @@ public class Keyboard : MonoBehaviour {
                 {
                     //Translate X positive
                     rb.AddRelativeForce(Vector3.forward * impulseRCS);
-                    gc.updateRCSFuel();
+                    gc.setRCSFuel(gc.getFuelRCS() - Time.deltaTime * .125f);
                 } 
                 if(Input.GetKey(KeyCode.LeftControl))
                 {
                     //Translate X negative
                     rb.AddRelativeForce(Vector3.back * impulseRCS);
-                    gc.updateRCSFuel();
+                    gc.setRCSFuel(gc.getFuelRCS() - Time.deltaTime * .125f);
                 }
                 if(Input.GetKey(KeyCode.R))
                 {
                     //Translate Y positive
                     rb.AddRelativeForce(Vector3.up* impulseRCS);
-                    gc.updateRCSFuel();
+                    gc.setRCSFuel(gc.getFuelRCS() - Time.deltaTime * .125f);
                 }
                 if(Input.GetKey(KeyCode.F))
                 {
                     //Translate Y negative
                     rb.AddRelativeForce(Vector3.down * impulseRCS);
-                    gc.updateRCSFuel();
+                    gc.setRCSFuel(gc.getFuelRCS() - Time.deltaTime * .125f);
                 }
                 if(Input.GetKey(KeyCode.X))
                 {
                     //Translate Z positive
                     rb.AddRelativeForce(Vector3.right * impulseRCS);
-                    gc.updateRCSFuel();
+                    gc.setRCSFuel(gc.getFuelRCS() - Time.deltaTime * .125f);
                 }
                 if(Input.GetKey(KeyCode.Z)) //Need to confirm
                 {
                     //Translate Z negative
                     rb.AddRelativeForce(Vector3.left * impulseRCS);
-                    gc.updateRCSFuel();
+                    gc.setRCSFuel(gc.getFuelRCS() - Time.deltaTime * .125f);
                 }
 
 
                 if(Input.GetKey(KeyCode.S))
                 {
-                    //Rotate X positive
-                    rb.AddRelativeTorque(Vector3.right * impulseRCS);
-                    gc.updateRCSFuel();
+                    //Rotate X negative
+                    rb.AddRelativeTorque(Vector3.left * impulseRCS);
+                    gc.setRCSFuel(gc.getFuelRCS() - Time.deltaTime * .125f);
                 }
                 if(Input.GetKey(KeyCode.W))
                 {
-                    //Rotate X negative
-                    rb.AddRelativeTorque(Vector3.left * impulseRCS);
-                    gc.updateRCSFuel();
+                    //Rotate X positive
+                    rb.AddRelativeTorque(Vector3.right * impulseRCS);
+                    gc.setRCSFuel(gc.getFuelRCS() - Time.deltaTime * .125f);
                 }
                 if(Input.GetKey(KeyCode.E))
                 {
                     //Rotate Y positive
                     rb.AddRelativeTorque(Vector3.up * impulseRCS);
-                    gc.updateRCSFuel();
+                    gc.setRCSFuel(gc.getFuelRCS() - Time.deltaTime * .125f);
                 }
                 if(Input.GetKey(KeyCode.Q))
                 {
                     //Rotate Y negative
                     rb.AddRelativeTorque(Vector3.down * impulseRCS);
-                    gc.updateRCSFuel();
+                    gc.setRCSFuel(gc.getFuelRCS() - Time.deltaTime * .125f);
                 }
                 if(Input.GetKey(KeyCode.A)) //Need to check for inversion
                 {
                     //Rotate Z positive
                     rb.AddRelativeTorque(Vector3.forward * impulseRCS);
-                    gc.updateRCSFuel();
+                    gc.setRCSFuel(gc.getFuelRCS() - Time.deltaTime * .125f);
                 }
                 if(Input.GetKey(KeyCode.D))
                 {
                     //Rotate Z negative
                     rb.AddRelativeTorque(Vector3.back * impulseRCS);
-                    gc.updateRCSFuel();
+                    gc.setRCSFuel(gc.getFuelRCS() - Time.deltaTime * .125f);
 
                 }  
             }

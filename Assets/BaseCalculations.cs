@@ -156,16 +156,20 @@ public class GeneralCalculations : MonoBehaviour
         return fuelRCS;
     }
 
-    public void updateRCSFuel()
+    public void setRCSFuel(float fuelRCS)
     {
-        fuelRCS -= 0.001f;
-        rb.mass -= 3.2f;
+        this.fuelRCS = fuelRCS;
+        updateMass();
+    }
+
+    private void updateMass() {
+        rb.mass = 72000 + 30000*(fuel/100f) + 2200*(fuelRCS/100f);
     }
 
     public float setFuel(float fuel)
     {
         this.fuel = fuel;
-        rb.mass = 72000 + 28000*(fuel/100f);
+        updateMass();
         return fuel;
     }
     public float getIAS()
