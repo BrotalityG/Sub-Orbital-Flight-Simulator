@@ -115,15 +115,15 @@ public class Keyboard : MonoBehaviour {
     }
 
     private void applyRoll() {
-        rb.AddRelativeTorque(Vector3.forward * roll * Mathf.Clamp((IAS-25)/100, 0, 1) * (gc.getDensity()/1.225f) * Responsiveness);
+        rb.AddRelativeTorque(Vector3.forward * roll * Mathf.Clamp(IAS/100, 0, 1) * (gc.getDensity()/1.225f) * Responsiveness);
     }
 
     private void applyPitch() {
-        rb.AddRelativeTorque(Vector3.right * -pitch * Mathf.Clamp((IAS-25)/100, 0, 1) * (gc.getDensity()/1.225f) * Responsiveness);
+        rb.AddRelativeTorque(Vector3.right * -pitch * Mathf.Clamp(IAS/100, 0, 1) * (gc.getDensity()/1.225f) * Responsiveness);
     }
 
     private void applyYaw() {
-        rb.AddRelativeTorque(Vector3.up * yaw * Mathf.Clamp((IAS-25)/100, 0, 1) * (gc.getDensity()/1.225f) * Responsiveness);
+        rb.AddRelativeTorque(Vector3.up * yaw * Mathf.Clamp(IAS/100, 0, 1) * (gc.getDensity()/1.225f) * Responsiveness);
     }
 
     private void applyThrottle() {
