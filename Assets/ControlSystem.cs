@@ -137,79 +137,83 @@ public class Keyboard : MonoBehaviour {
             else if (Input.GetKey(KeyCode.LeftControl)) throttle -= throttleIncrement;
         } else {
             //Need to populate with movement
-            if(Input.GetKey(KeyCode.LeftShift))
+            if(gc.getFuelRCS() > 0)
             {
-                //Translate X positive
-                rb.AddRelativeForce(Vector3.forward * impulseRCS);
-                gc.updateRCSFuel();
-            } 
-            if(Input.GetKey(KeyCode.LeftControl))
-            {
-                //Translate X negative
-                rb.AddRelativeForce(Vector3.back * impulseRCS);
-                gc.updateRCSFuel();
-            }
-            if(Input.GetKey(KeyCode.R))
-            {
-                //Translate Y positive
-                rb.AddRelativeForce(Vector3.up* impulseRCS);
-                gc.updateRCSFuel();
-            }
-            if(Input.GetKey(KeyCode.F))
-            {
-                //Translate Y negative
-                rb.AddRelativeForce(Vector3.down * impulseRCS);
-                gc.updateRCSFuel();
-            }
-            if(Input.GetKey(KeyCode.X))
-            {
-                //Translate Z positive
-                rb.AddRelativeForce(Vector3.right * impulseRCS);
-                gc.updateRCSFuel();
-            }
-            if(Input.GetKey(KeyCode.Z)) //Need to confirm
-            {
-                //Translate Z negative
-                rb.AddRelativeForce(Vector3.left * impulseRCS);
-                gc.updateRCSFuel();
-            }
+                if(Input.GetKey(KeyCode.LeftShift))
+                {
+                    //Translate X positive
+                    rb.AddRelativeForce(Vector3.forward * impulseRCS);
+                    gc.updateRCSFuel();
+                } 
+                if(Input.GetKey(KeyCode.LeftControl))
+                {
+                    //Translate X negative
+                    rb.AddRelativeForce(Vector3.back * impulseRCS);
+                    gc.updateRCSFuel();
+                }
+                if(Input.GetKey(KeyCode.R))
+                {
+                    //Translate Y positive
+                    rb.AddRelativeForce(Vector3.up* impulseRCS);
+                    gc.updateRCSFuel();
+                }
+                if(Input.GetKey(KeyCode.F))
+                {
+                    //Translate Y negative
+                    rb.AddRelativeForce(Vector3.down * impulseRCS);
+                    gc.updateRCSFuel();
+                }
+                if(Input.GetKey(KeyCode.X))
+                {
+                    //Translate Z positive
+                    rb.AddRelativeForce(Vector3.right * impulseRCS);
+                    gc.updateRCSFuel();
+                }
+                if(Input.GetKey(KeyCode.Z)) //Need to confirm
+                {
+                    //Translate Z negative
+                    rb.AddRelativeForce(Vector3.left * impulseRCS);
+                    gc.updateRCSFuel();
+                }
 
 
-            if(Input.GetKey(KeyCode.S))
-            {
-                //Rotate X positive
-                rb.AddRelativeTorque(Vector3.right * impulseRCS);
-                gc.updateRCSFuel();
-            }
-            if(Input.GetKey(KeyCode.W))
-            {
-                //Rotate X negative
-                rb.AddRelativeTorque(Vector3.left * impulseRCS);
-                gc.updateRCSFuel();
-            }
-            if(Input.GetKey(KeyCode.E))
-            {
-                //Rotate Y positive
-                rb.AddRelativeTorque(Vector3.up * impulseRCS);
-                gc.updateRCSFuel();
-            }
-            if(Input.GetKey(KeyCode.Q))
-            {
-                //Rotate Y negative
-                rb.AddRelativeTorque(Vector3.down * impulseRCS);
-                gc.updateRCSFuel();
-            }
-            if(Input.GetKey(KeyCode.A)) //Need to check for inversion
-            {
-                //Rotate Z positive
-                rb.AddRelativeTorque(Vector3.forward * impulseRCS);
-                gc.updateRCSFuel();
-            }
-            if(Input.GetKey(KeyCode.D))
-            {
-                //Rotate Z negative
-                rb.AddRelativeTorque(Vector3.back * impulseRCS);
-                gc.updateRCSFuel();
+                if(Input.GetKey(KeyCode.S))
+                {
+                    //Rotate X positive
+                    rb.AddRelativeTorque(Vector3.right * impulseRCS);
+                    gc.updateRCSFuel();
+                }
+                if(Input.GetKey(KeyCode.W))
+                {
+                    //Rotate X negative
+                    rb.AddRelativeTorque(Vector3.left * impulseRCS);
+                    gc.updateRCSFuel();
+                }
+                if(Input.GetKey(KeyCode.E))
+                {
+                    //Rotate Y positive
+                    rb.AddRelativeTorque(Vector3.up * impulseRCS);
+                    gc.updateRCSFuel();
+                }
+                if(Input.GetKey(KeyCode.Q))
+                {
+                    //Rotate Y negative
+                    rb.AddRelativeTorque(Vector3.down * impulseRCS);
+                    gc.updateRCSFuel();
+                }
+                if(Input.GetKey(KeyCode.A)) //Need to check for inversion
+                {
+                    //Rotate Z positive
+                    rb.AddRelativeTorque(Vector3.forward * impulseRCS);
+                    gc.updateRCSFuel();
+                }
+                if(Input.GetKey(KeyCode.D))
+                {
+                    //Rotate Z negative
+                    rb.AddRelativeTorque(Vector3.back * impulseRCS);
+                    gc.updateRCSFuel();
+
+                }  
             }
 
         }
