@@ -49,7 +49,7 @@ public class Keyboard : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {      
-        if (gc.getFuel() > 0) {
+        if (gc.getFuel() > 0f) {
             gc.setFuel(gc.getFuel() - throttle/maxThrottle * Time.deltaTime * .25f); // Subtract fuel based on throttle
         }
         HandleInputs();
@@ -162,37 +162,37 @@ public class Keyboard : MonoBehaviour {
                 {
                     //Translate X positive
                     rb.AddRelativeForce(Vector3.forward * impulseRCS);
-                    gc.setRCSFuel(gc.getFuelRCS() - Time.deltaTime * .125f);
+                    gc.updateRCSFuel();
                 } 
                 if(Input.GetKey(KeyCode.LeftControl))
                 {
                     //Translate X negative
                     rb.AddRelativeForce(Vector3.back * impulseRCS);
-                    gc.setRCSFuel(gc.getFuelRCS() - Time.deltaTime * .125f);
+                    gc.updateRCSFuel();
                 }
                 if(Input.GetKey(KeyCode.R))
                 {
                     //Translate Y positive
                     rb.AddRelativeForce(Vector3.up* impulseRCS);
-                    gc.setRCSFuel(gc.getFuelRCS() - Time.deltaTime * .125f);
+                    gc.updateRCSFuel();
                 }
                 if(Input.GetKey(KeyCode.F))
                 {
                     //Translate Y negative
                     rb.AddRelativeForce(Vector3.down * impulseRCS);
-                    gc.setRCSFuel(gc.getFuelRCS() - Time.deltaTime * .125f);
+                    gc.updateRCSFuel();
                 }
                 if(Input.GetKey(KeyCode.X))
                 {
                     //Translate Z positive
                     rb.AddRelativeForce(Vector3.right * impulseRCS);
-                    gc.setRCSFuel(gc.getFuelRCS() - Time.deltaTime * .125f);
+                    gc.updateRCSFuel();
                 }
                 if(Input.GetKey(KeyCode.Z)) //Need to confirm
                 {
                     //Translate Z negative
                     rb.AddRelativeForce(Vector3.left * impulseRCS);
-                    gc.setRCSFuel(gc.getFuelRCS() - Time.deltaTime * .125f);
+                    gc.updateRCSFuel();
                 }
 
 
@@ -200,37 +200,37 @@ public class Keyboard : MonoBehaviour {
                 {
                     //Rotate X negative
                     rb.AddRelativeTorque(Vector3.left * impulseRCS);
-                    gc.setRCSFuel(gc.getFuelRCS() - Time.deltaTime * .125f);
+                    gc.updateRCSFuel();
                 }
                 if(Input.GetKey(KeyCode.W))
                 {
                     //Rotate X positive
                     rb.AddRelativeTorque(Vector3.right * impulseRCS);
-                    gc.setRCSFuel(gc.getFuelRCS() - Time.deltaTime * .125f);
+                    gc.updateRCSFuel();
                 }
                 if(Input.GetKey(KeyCode.E))
                 {
                     //Rotate Y positive
                     rb.AddRelativeTorque(Vector3.up * impulseRCS);
-                    gc.setRCSFuel(gc.getFuelRCS() - Time.deltaTime * .125f);
+                    gc.updateRCSFuel();
                 }
                 if(Input.GetKey(KeyCode.Q))
                 {
                     //Rotate Y negative
                     rb.AddRelativeTorque(Vector3.down * impulseRCS);
-                    gc.setRCSFuel(gc.getFuelRCS() - Time.deltaTime * .125f);
+                    gc.updateRCSFuel();
                 }
                 if(Input.GetKey(KeyCode.A)) //Need to check for inversion
                 {
                     //Rotate Z positive
                     rb.AddRelativeTorque(Vector3.forward * impulseRCS);
-                    gc.setRCSFuel(gc.getFuelRCS() - Time.deltaTime * .125f);
+                    gc.updateRCSFuel();
                 }
                 if(Input.GetKey(KeyCode.D))
                 {
                     //Rotate Z negative
                     rb.AddRelativeTorque(Vector3.back * impulseRCS);
-                    gc.setRCSFuel(gc.getFuelRCS() - Time.deltaTime * .125f);
+                    gc.updateRCSFuel();
 
                 }  
             }
