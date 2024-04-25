@@ -10,6 +10,8 @@ public class Skybox_AtmosphereAdj : MonoBehaviour
     private static float Atmos_Thick_Start = 0.65f;
     private static float Space_Altitude = 0f;
     private static float Transition_Distance = 90000f;
+
+    public GeneralCalculations cs;
     // Start is called before the first frame update
     void Start()
     {
@@ -24,11 +26,11 @@ public class Skybox_AtmosphereAdj : MonoBehaviour
 
     private void AtmosphereUpdater ()
     {
-        if (gameObject.transform.position.y > -(Transition_Distance) && gameObject.transform.position.y < Space_Altitude){
+        if (cs.getAlt() > -(Transition_Distance) && cs.getAlt() < Space_Altitude){
 
-            RenderSettings.skybox.SetFloat("_AtmosphereThickness", Atmos_Thick_Start*((Transition_Distance-(Transition_Distance-Mathf.Abs(gameObject.transform.position.y)))/Transition_Distance));
+            RenderSettings.skybox.SetFloat("_AtmosphereThickness", Atmos_Thick_Start*((Transition_Distance-(Transition_Distance-Mathf.Abs(cs.getAlt())))/Transition_Distance));
 
-        }else if (gameObject.transform.position.y >= Space_Altitude){
+        }else if (cs.getAlt() >= Space_Altitude){
 
             RenderSettings.skybox.SetFloat("_AtmosphereThickness", 0.0f);
 
